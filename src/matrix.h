@@ -62,7 +62,7 @@ public:
 	}
 
 	operator cv::Mat() {
-		cv::Mat mat {cv::Mat_<T>{width, height}};
+		cv::Mat mat {cv::Mat_<T>{height, width}};
 		for(int x=1; x<=width; x++) for(int y=1; y<=height; y++) 
 			mat.at<T>(y-1, x-1) = (*this)[x][y];
 		return mat;

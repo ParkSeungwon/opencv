@@ -4,7 +4,7 @@
 using namespace std;
 
 array<unsigned char, 4> change(const char* p)
-{
+{///change color code 7B543E -> uchar 232,12,122
 	unsigned char c[6];
 	if(*p == '#') {
 		for(int i=0; i<6; i++) {
@@ -19,7 +19,7 @@ array<unsigned char, 4> change(const char* p)
 array<Matrix<unsigned char>, 4> read_xpm(const char** xpm) {
 	stringstream ss;
 	ss << xpm[0];
-	size_t w, h, color, ch;//ch = expressing character per color
+	size_t w, h, color, ch;//ch = how many characters per color
 	ss >> w >> h >> color >> ch;
 
 	map<string, array<unsigned char, 4>> color_map;
@@ -27,13 +27,12 @@ array<Matrix<unsigned char>, 4> read_xpm(const char** xpm) {
 		color_map[string(xpm[i+1], ch)] = change(xpm[i+1] + ch + 3);
 
 	Matrix<unsigned char> r{w,h}, g{w,h}, b{w,h}, a{w,h};
-
 	for(int y=0; y<h; y++) for(int x=0; x<w; x++) {
 		r[x+1][y+1] = color_map[string(xpm[color+1+y] + x*ch, ch)][0];
 		g[x+1][y+1] = color_map[string(xpm[color+1+y] + x*ch, ch)][1];
 		b[x+1][y+1] = color_map[string(xpm[color+1+y] + x*ch, ch)][2];
 		a[x+1][y+1] = color_map[string(xpm[color+1+y] + x*ch, ch)][3];
 	}
-	return {r,g,b,a};
+	return {b,g,r,a};
 }
 
