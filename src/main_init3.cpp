@@ -31,10 +31,13 @@ int main()
 	Matrix<int> mm{mat2};
 	cout << mm << endl;
 	vector<Mat> v1, v2;
-	for(auto& a : read_xpm(logo_xpm)) v1.push_back(a); 
+	auto rgb = read_xpm(logo_xpm);
+	strcpy((char*)rgb[2].data(), "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+	for(auto& a : rgb) v1.push_back(a); 
 	for(auto& a : read_xpm(xpm)) v2.push_back(a); 
 
 	merge(v1, merge1);
+	cout << merge1;
 	line(merge1, {50,50}, {100,10}, {0,0,255}, 8);
 	putText(merge1, "Test tes", {100,100},0,0.5,{0,255,0}, 2);
 	ellipse(merge1, {100,100}, Size{50,30},70,0,360,{255,0,0},-1);

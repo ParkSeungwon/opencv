@@ -6,14 +6,17 @@ using namespace cv;
 
 int main(int ac, char** av)
 {
-	VideoCapture cap(av[1]);
+	VideoCapture vid(0);
+	VideoWriter wr;
+	int w = vid.get(CV_CAP_PROP_FRAME_WIDTH);
+	int h = vid.get(CV_CAP_PROP_FRAME_HEIGHT);
+	wr.open("wr.avi", CV_FOURCC('D','I','V','4'), 30, Size{w,h});
 	Mat frame;
-	int total_frame = cap.get(CV_CAP_PROP_FRAME_COUNT);
-	int frame_rate = cap.get(CV_CAP_PROP_FPS);
-	while(total_frame--) {
-		cap >> frame;
+	namedWindow("other");
+	while(waitKey(10) == -1) {//wait for 10ms, no input during 10ms then return -1
+		vid >> frame;
+		wr << frame;
 		imshow("video", frame);
-		if(waitKey(frame_rate) >= 0) break;
 	}
 }
 

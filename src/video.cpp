@@ -26,15 +26,15 @@ int main()
 		exit(-1);
 	}
 	Mat frame;
-	int c = 0;
-	int hue = cap.get(CV_CAP_PROP_HUE);
-	namedWindow("camera view");
-	createTrackbar( "hue bar","camera view", &hue, 50, hue_bar);
+//	int c = 0;
+//	int hue = cap.get(CV_CAP_PROP_HUE);
+//	namedWindow("camera view");
+//	createTrackbar( "hue bar","camera view", &hue, 50, hue_bar);
 	while(1) {
-		cap.set(CV_CAP_PROP_HUE, hue);
+//		cap.set(CV_CAP_PROP_HUE, hue);
 		cap >> frame;
-		putText(frame, to_string(hue),{300,200}, 0,1,{255,0,0});
-		writer << frame;
+//		putText(frame, to_string(hue),{300,200}, 0,1,{255,0,0});
+//		writer << frame;
 		imshow("camera view", frame);
 		if(waitKey(30) >= 0) break;
 	}

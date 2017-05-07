@@ -1,27 +1,45 @@
 //#include<cxcore.hpp>
 #include<highgui.h>
-#include"matrix.h"
-#include<cv.hpp>
+#include<cxcore.hpp>
+#include<iostream>
 using namespace std;
 using namespace cv;
 
 int main()
 {
-	Mat image = imread("IMG_0315.JPG");
-	cout << image.channels() << endl;
-	Mat kernel_shapen = Matrix<int>{{0,-1,0},{-1,5,-1},{0,-1,0}};
-	Mat kernel_blur = Matrix<float>{{1,1,1},{1,1,1},{1,1,1}}/9.0f;
-	Mat kernel_gaus = getGaussianKernel(9, 0.5, CV_32F);
-	{Matrix<float> m{kernel_gaus}; cout << m << endl;}
-	Mat dst_shapen, dst_blur, dst_gaus;
-
-	filter2D(image, dst_shapen, image.depth(), kernel_shapen);
-	filter2D(image, dst_blur, image.depth(), kernel_blur);
-	filter2D(image, dst_gaus, image.depth(), kernel_gaus);
-
-	imshow("원본영상", image);
-	imshow("blur", dst_blur);
-	imshow("gaussian", dst_gaus);
-	imshow("shapen", dst_shapen);
-	waitKey(0);
+//	CVMat t = imread("IMG_0315.JPG");
+//	t.filter(SHARPEN);
+//	t.show("sharpen");
+//	t.restore();
+//	t.filter(BLUR);
+//	putText(t, "Lord Buddha", {100,100}, 0, 0.5, {255,0,0}, 2);
+//	t.show("blur");
+//
+//	Sobel(t,t, CV_32F, 1,0,3);
+//	t.show("sobel");
+//	t.restore();
+//	Sobel(t,t, CV_32F, 0,1,3);
+//	t.show("soble2");
+//	t.restore();
+//	Canny(t,t, 30,100);
+//	t.show("canny");
+//	t.restore();
+//	Laplacian(t,t, 3);
+//	t.show("lap");
+//	t.restore();
+//
+//	CVMat t2 = Matrix<float>{{1,2},{2,1}};
+//	cout << t2.inv();
+//
+//	namedWindow("vidcap");
+	Mat m;
+	VideoCapture v{0};
+	if(!v.isOpened()) {
+		cout << "카메라가 연결되지 않았습니다." << endl;
+		exit(-1);
+	}
+	while(waitKey(0) == -1) {
+		v >> m;
+		imshow("vidcap", m);
+	}
 }
