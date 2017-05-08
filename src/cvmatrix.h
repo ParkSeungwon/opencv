@@ -18,9 +18,11 @@ public:
 	void gray();
 	void noise(int scale);//normal distrubution noise
 	void median(int ksize);//median is good for salt&pepper noise
+	cv::Mat_<float> normalize();
 	
 protected:
 	cv::Mat save_;
+	std::vector<Mat> bgr_;
 
 private:
 	void template_init();
@@ -30,6 +32,6 @@ private:
 static cv::Mat BLUR = Matrix<float>{{1,1,1},{1,1,1},{1,1,1}} * (1.0f / 9);
 static cv::Mat GAUSSIAN = Matrix<float>{{1,2,1},{2,4,2},{1,2,1}} * (1.0f / 16);
 static cv::Mat SHARPEN = Matrix<float>{{0,-1,0},{-1,5,-1},{0,-1,0}};
-static cv::Mat GAUS = cv::getGaussianKernel(9, 0.5, CV_32F);
+//static cv::Mat GAUS = cv::getGaussianKernel(9, 0.5, CV_32F);
 static cv::Mat SOBELX = Matrix<float>{{-1,0,1},{-2,0,2},{-1,0,1}};
 static cv::Mat SOBELY = Matrix<float>{{-1,-2,-1},{0,0,0},{1,2,1}};

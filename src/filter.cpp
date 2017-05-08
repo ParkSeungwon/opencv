@@ -8,37 +8,31 @@ int main()
 {
 	CVMat t = imread("IMG_0315.JPG");
 	t.show("original");
-	t.save();
-//	t.filter(SOBELX);
-//	t.show("sobelX");
-//	t.restore();
-//	t.show("o2");
-//	t.filter(SOBELY);
-//	t.show("sobelY");
-//	t.restore();
-//	t.show("o");
-//	putText(t, "Lord Buddha", {100,100}, 0, 0.5, {255,0,0}, 2);
-//	t.show("sobel");
-//	t.restore();
+	t.filter(SOBELX);
+	t.show("sobelX");
+	t.restore();
+	t.filter(GAUSSIAN);
+	t.show("gaussian");
+	t.restore();
+	t.filter(SOBELY);
+	t.show("sobelY");
+	t.restore();
+	putText(t, "Lord Buddha", {100,100}, 0, 0.5, {255,0,0}, 2);
 
-//	Sobel(t,t, CV_32F, 1,0,3);
-//	t.show("sobel");
-//	t.restore();
-//	Sobel(t,t, CV_32F, 0,1,3);
-//	t.show("soble2");
-//	t.restore();
-//	Canny(t,t, 30,100);
-//	t.show("canny");
-//	t.restore();
+	Canny(t,t, 30,100);
+	t.show("canny");
+	t.restore();
 	t.noise(10);
 	t.show("noise");
-//	t.restore();
-//	t.filter(getGaussianKernel(9, 3, CV_32F));//aperture odd, sigma
-//	t.show("gaussian blur");
 	t.median(5);
 	t.show("median");
 	t.restore();
-	t.show("0");
+	t.gray();
+	cout << t.channels() << endl;
+	t.show("gray");
+	t.filter(SOBELX);
+	t.show("filgr");
+	t.restore();
 
 	CVMat t2 = Matrix<float>{{1,2},{2,1}};
 	cout << t2.inv();
@@ -47,12 +41,11 @@ int main()
 	while(waitKey(30) == -1) {
 		cap >> t;
 		t.filter(SHARPEN);
-		flip(t,t,1);
+//		flip(t,t,1);
 		t.show("vidcap");
 	}
 
 	t.xpm(xpm);
-	t.gray();
 	t.show("bl");
 	waitKey(0);
 }

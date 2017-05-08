@@ -1,10 +1,12 @@
 #include"cvmatrix.h"
 #include<random>
+#include<cassert>
 using namespace std;
 
-CVMat::CVMat(const cv::Mat& r) : cv::Mat(r)
+CVMat::CVMat(const cv::Mat& r) : cv::Mat{r} 
 {
-	//save();
+	save_ = clone();
+	split(*this, bgr_);
 }
 
 template<typename T> CVMat::CVMat(const Matrix<T>& r) 
@@ -23,25 +25,26 @@ CVMat::operator cv::Mat()
 	r = *this;
 	return r;
 }
+
 void CVMat::noise(int scale)
-{
+{///gaussian noise 
 	normal_distribution<float> nd;
 	random_device rd;
-	int c = channels();
-	int d = depth();
-	for(int y=0; y<rows; y++) for(int x=0; x<cols; x++) for(int i=0; i<c; i++) {
-		float noise = scale * nd(rd);
-		switch(d) {
-			case CV_8U: 
-				at<cv::Vec3b>(y, x)[i] += noise; break;
-			case CV_8S: at<char>(y, x, i) += noise; break;
-			case CV_16U: at<unsigned short>(y, x, i) += noise; break;
-			case CV_16S: at<short>(y, x, i) += noise; break;
-			case CV_32S: at<int>(y, x, i) += noise; break;
-			case CV_32F: at<float>(y, x, i) += noise; break;
-			case CV_64F: at<double>(y, x, i) += noise; break;
-		}
-	}
+	for(int i=0; i<rows*cols*channels(); i++) *(data+i) += scale * nd(rd);
+}
+
+cv::Mat_<float> CVMat::normalize()
+{
+//	assert(channels() == 1 && depth() == CV_8UC1);
+	cv::Mat_<float> m;
+	cv::normalize(*this, m, 0, 1, cv::NORM_MINMAX, CV_8UC1);
+//	cv::Mat_<float> m{rows, cols};
+//	int sum = 0;
+//	for(int i=0; i<rows*cols; i++) {
+//		sum += *(data + i);
+//		*((float*)m.data+i) = (float)*(data+i) / 255 - 0.5;
+//	}
+	return m;
 }
 
 array<Matrix<unsigned char>, 4> read_xpm(const char** xpm);
@@ -52,15 +55,14 @@ void CVMat::xpm(const char** x)
 	merge(v, *this);
 }
 
-void CVMat::save()
-{
-	save_ = *this;
-}
-
 void CVMat::restore()
 {
-	cout << save_.rows << 'X' << save_.cols << endl;
-	cv::Mat::operator=(save_);
+	save_.copyTo(*this);
+}
+
+void CVMat::save()
+{
+	copyTo(save_);
 }
 
 void CVMat::filter(const Mat& ft)
