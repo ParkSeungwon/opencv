@@ -1,20 +1,26 @@
-//#include<cxcore.hpp>
-#include<highgui.h>
-#include<cxcore.hpp>
 #include<iostream>
+#include"cvmatrix.h"
+#include"blender-32x32.xpm"
 using namespace std;
 using namespace cv;
 
 int main()
 {
-//	CVMat t = imread("IMG_0315.JPG");
-//	t.filter(SHARPEN);
-//	t.show("sharpen");
+	CVMat t = imread("IMG_0315.JPG");
+	t.show("original");
+	t.save();
+//	t.filter(SOBELX);
+//	t.show("sobelX");
 //	t.restore();
-//	t.filter(BLUR);
+//	t.show("o2");
+//	t.filter(SOBELY);
+//	t.show("sobelY");
+//	t.restore();
+//	t.show("o");
 //	putText(t, "Lord Buddha", {100,100}, 0, 0.5, {255,0,0}, 2);
-//	t.show("blur");
-//
+//	t.show("sobel");
+//	t.restore();
+
 //	Sobel(t,t, CV_32F, 1,0,3);
 //	t.show("sobel");
 //	t.restore();
@@ -24,22 +30,29 @@ int main()
 //	Canny(t,t, 30,100);
 //	t.show("canny");
 //	t.restore();
-//	Laplacian(t,t, 3);
-//	t.show("lap");
+	t.noise(10);
+	t.show("noise");
 //	t.restore();
-//
-//	CVMat t2 = Matrix<float>{{1,2},{2,1}};
-//	cout << t2.inv();
-//
-//	namedWindow("vidcap");
-	Mat m;
-	VideoCapture v{0};
-	if(!v.isOpened()) {
-		cout << "카메라가 연결되지 않았습니다." << endl;
-		exit(-1);
+//	t.filter(getGaussianKernel(9, 3, CV_32F));//aperture odd, sigma
+//	t.show("gaussian blur");
+	t.median(5);
+	t.show("median");
+	t.restore();
+	t.show("0");
+
+	CVMat t2 = Matrix<float>{{1,2},{2,1}};
+	cout << t2.inv();
+
+	VideoCapture cap{0};
+	while(waitKey(30) == -1) {
+		cap >> t;
+		t.filter(SHARPEN);
+		flip(t,t,1);
+		t.show("vidcap");
 	}
-	while(waitKey(0) == -1) {
-		v >> m;
-		imshow("vidcap", m);
-	}
+
+	t.xpm(xpm);
+	t.gray();
+	t.show("bl");
+	waitKey(0);
 }
