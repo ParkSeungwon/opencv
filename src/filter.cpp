@@ -41,6 +41,7 @@ int main()
 	while(waitKey(30) == -1) {
 		cap >> t;
 		t.filter(SHARPEN);
+		Canny(t, t, 90, 180);
 //		flip(t,t,1);
 		t.show("vidcap");
 	}

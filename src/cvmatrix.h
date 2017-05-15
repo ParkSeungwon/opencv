@@ -11,18 +11,35 @@ public:
 	template<typename T> CVMat(const Matrix<T>& r);
 	operator cv::Mat();
 	void filter(const Mat& m);//apply kernel
-	void show(std::string title);
+	void show(std::string title="OpenCV");
 	void restore();
 	void save();
 	void xpm(const char** xpm_content);
 	void gray();
 	void noise(int scale);//normal distrubution noise
 	void median(int ksize);//median is good for salt&pepper noise
-	cv::Mat_<float> normalize();
+	void normalize(float a, float b);
+	void diffx();//after normalize to float
+	void diffy();
+	void edge(int lowthreshold=30, int thresXratio=100);//Canny
+	void corner(float k = 0.04, int block = 3, int aperture = 3);
+	void draw_detected_corner(float thres = 0.01);
+	void detect_line(int threshold=180, int continuous=50, int hop=10);//edge->Hough
+	void detect_circle(int canny_threshold=200, int center_threshold=100,//gray->circ 
+			int min_radius=0, int max_radius=0);//gradient를 보므로 edge로 하면 안됨.
+	void detect_face();//gray->face
+	void draw_detected_line(cv::Scalar color = {0,0,255});
+	void draw_detected_circle(cv::Scalar color = {0,0,255});
+	void draw_detected_face();
+	void fourier(std::string window = "Fourier");//after gray
+	cv::MatND histo(std::string windwo = "Histogram");//after gray
 	
 protected:
-	cv::Mat save_;
+	cv::Mat save_, harris_;
 	std::vector<Mat> bgr_;
+	std::vector<cv::Vec4i> lines_;
+	std::vector<cv::Vec3f> circles_;
+	std::vector<cv::Rect> faces_;
 
 private:
 	void template_init();

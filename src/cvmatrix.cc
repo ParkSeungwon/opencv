@@ -2,6 +2,39 @@
 #include<random>
 #include<cassert>
 using namespace std;
+using namespace cv;
+
+static string haar_dir = "/usr/share/opencv/haarcascades/";
+static string lbp_dir = "/usr/share/opencv/lbpcascades/";
+static const char* haar_cascade[] = {
+	"haarcascade_mcs_mouth.xml",
+	"haarcascade_eye_tree_eyeglasses.xml",
+	"haarcascade_mcs_eyepair_small.xml",
+	"haarcascade_lefteye_2splits.xml",
+	"haarcascade_frontalface_alt_tree.xml",
+	"haarcascade_frontalface_default.xml",
+	"haarcascade_mcs_eyepair_big.xml",
+	"haarcascade_mcs_upperbody.xml",
+	"haarcascade_mcs_righteye.xml",
+	"haarcascade_smile.xml",
+	"haarcascade_righteye_2splits.xml",
+	"haarcascade_mcs_nose.xml",
+	"haarcascade_upperbody.xml",
+	"haarcascade_mcs_leftear.xml",
+	"haarcascade_profileface.xml",
+	"haarcascade_mcs_lefteye.xml",
+	"haarcascade_frontalface_alt2.xml",
+	"haarcascade_eye.xml",
+	"haarcascade_fullbody.xml",
+	"haarcascade_mcs_rightear.xml",
+	"haarcascade_lowerbody.xml",
+	"haarcascade_frontalface_alt.xml"
+};
+static const char* lbp_cascade[] = {
+	"lbpcascade_frontalface.xml", 
+	"lbpcascade_profileface.xml", 
+	"lbpcascade_silverware.xml"
+};
 
 CVMat::CVMat(const cv::Mat& r) : cv::Mat{r} 
 {
@@ -14,9 +47,38 @@ template<typename T> CVMat::CVMat(const Matrix<T>& r)
 	int w = r.get_width();
 	int h = r.get_height();
 	cv::Mat_<T> m{h, w};
-	for(int x=1; x<=w; x++) for(int y=1; y<=h; y++) 
-		m.at<T>(y-1, x-1) = r[x][y];
+	for(int x=1; x<=w; x++) for(int y=1; y<=h; y++) m.at<T>(y-1, x-1) = r[x][y];
 	cv::Mat::operator=(m);
+}
+
+void CVMat::corner(float k, int b, int a)
+{
+	cornerHarris(*this, harris_, b, a, k, BORDER_DEFAULT);
+}
+
+void CVMat::draw_detected_corner(float thresh) {
+	int n = 0;
+	for(int j=0; j<harris_.rows ; j++ ) for(int i=0; i<harris_.cols; i++ ) {
+		if(harris_.at<float>(j,i) > thresh) {
+			n++;
+			circle(*this, Point( i, j ), 5,  {0,0,255}, 2, 8, 0 );
+		}
+	}
+	cout << n << " corners detected" << endl;
+}
+
+void CVMat::detect_face()
+{
+	equalizeHist(*this, *this);
+	cv::CascadeClassifier cas;
+	cas.load(haar_dir + haar_cascade[5]);
+	cas.detectMultiScale(*this, faces_, 1.1, 4, cv::CASCADE_SCALE_IMAGE, {30,30});
+	cout << faces_.size() << " faces detected" << endl;
+}
+
+void CVMat::draw_detected_face()
+{
+	for(auto& a : faces_) rectangle(*this, a, {0,0,255});
 }
 
 CVMat::operator cv::Mat() 
@@ -26,6 +88,77 @@ CVMat::operator cv::Mat()
 	return r;
 }
 
+MatND CVMat::histo(string window)
+{
+	int histSize[] = {256}; // hue varies from 0 to 179, see cvtColor 
+	float hranges[] = { 0, 255 }; 
+	const float* ranges[] = { hranges }; 
+	MatND hist; // we compute the histogram from the 0-th and 1-st channels 
+	int channels[] = {0}; 
+	calcHist( this, 1, channels, Mat(), // do not use mask 
+			hist, 1, histSize, ranges);//, true, false ); 
+	double maxVal=0, minVal=0; 
+	minMaxLoc(hist, &minVal, &maxVal, 0, 0);
+	Mat histImg{histSize[0], histSize[0], CV_8U, Scalar(255)}; 
+	int hpt = static_cast<int>(0.9 * histSize[0]);
+	for( int h = 0; h < histSize[0]; h++ ) {
+		float binVal = hist.at<float>(h);
+		int intensity = static_cast<int>(binVal*hpt/maxVal);
+	
+		line(histImg, {h, histSize[0]}, {h, histSize[0] - intensity}, Scalar::all(0));
+	} 
+	imshow(window, histImg);
+	return hist;
+}
+
+void CVMat::fourier(string window)
+{
+	using namespace cv;
+    Mat padded;                            //expand input image to optimal size
+    int m = getOptimalDFTSize( rows );
+    int n = getOptimalDFTSize( cols ); // on the border add zero values
+    copyMakeBorder(*this, padded, 0,m-rows,0,n-cols, BORDER_CONSTANT, Scalar::all(0));
+
+    Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
+    Mat complexI;
+    merge(planes, 2, complexI);  // Add to the expanded another plane with zeros
+
+    dft(complexI, complexI);     // this way the result may fit in the source matrix
+
+    // compute the magnitude and switch to logarithmic scale
+    // => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
+    split(complexI, planes);       // planes[0] = Re(DFT(I), planes[1] = Im(DFT(I))
+    magnitude(planes[0], planes[1], planes[0]);// planes[0] = magnitude
+    Mat magI = planes[0];
+
+    magI += Scalar::all(1);                    // switch to logarithmic scale
+    log(magI, magI);
+
+    // crop the spectrum, if it has an odd number of rows or columns
+    magI = magI(Rect(0, 0, magI.cols & -2, magI.rows & -2));
+
+    // rearrange the quadrants of Fourier image  so that the origin is at the image center
+    int cx = magI.cols/2;
+    int cy = magI.rows/2;
+
+    Mat q0(magI, Rect(0, 0, cx, cy));   // Top-Left - Create a ROI per quadrant
+    Mat q1(magI, Rect(cx, 0, cx, cy));  // Top-Right
+    Mat q2(magI, Rect(0, cy, cx, cy));  // Bottom-Left
+    Mat q3(magI, Rect(cx, cy, cx, cy)); // Bottom-Right
+
+    Mat tmp;                           // swap quadrants (Top-Left with Bottom-Right)
+    q0.copyTo(tmp);
+    q3.copyTo(q0);
+    tmp.copyTo(q3);
+
+    q1.copyTo(tmp);                    // swap quadrant (Top-Right with Bottom-Left)
+    q2.copyTo(q1);
+    tmp.copyTo(q2);
+
+	cv::normalize(magI, magI, 0, 1, CV_MINMAX);//Transform the matrix with float values into a
+	imshow(window, magI);
+}
+
 void CVMat::noise(int scale)
 {///gaussian noise 
 	normal_distribution<float> nd;
@@ -33,18 +166,22 @@ void CVMat::noise(int scale)
 	for(int i=0; i<rows*cols*channels(); i++) *(data+i) += scale * nd(rd);
 }
 
-cv::Mat_<float> CVMat::normalize()
+void CVMat::diffx()
 {
-//	assert(channels() == 1 && depth() == CV_8UC1);
-	cv::Mat_<float> m;
-	cv::normalize(*this, m, 0, 1, cv::NORM_MINMAX, CV_8UC1);
-//	cv::Mat_<float> m{rows, cols};
-//	int sum = 0;
-//	for(int i=0; i<rows*cols; i++) {
-//		sum += *(data + i);
-//		*((float*)m.data+i) = (float)*(data+i) / 255 - 0.5;
-//	}
-	return m;
+	assert(depth() == CV_32F);
+	for(int y=0; y<rows; y++) for(int x=0; x<cols-1; x++)
+		at<float>(y, x) = at<float>(y, x+1) - at<float>(y, x);
+}
+void CVMat::diffy()
+{
+	assert(depth() == CV_32F);
+	for(int y=0; y<rows-1; y++) for(int x=0; x<cols; x++)
+		at<float>(y, x) = at<float>(y+1, x) - at<float>(y, x);
+}
+
+void CVMat::normalize(float a, float b)
+{
+	cv::normalize(*this, *this, a, b, cv::NORM_MINMAX, CV_32FC1);
 }
 
 array<Matrix<unsigned char>, 4> read_xpm(const char** xpm);
@@ -63,6 +200,33 @@ void CVMat::restore()
 void CVMat::save()
 {
 	copyTo(save_);
+}
+
+void CVMat::detect_line(int th, int c, int h) 
+{
+	HoughLinesP(*this, lines_, 1, M_PI/180, th, c, h);
+	cout << lines_.size() << " lines detected\n";
+}
+
+void CVMat::detect_circle(int can, int ct, int min, int max)
+{
+	HoughCircles(*this, circles_, CV_HOUGH_GRADIENT, 1, rows/8, can, ct, min, max);
+	cout << circles_.size() << " circles detected\n";
+}
+
+void CVMat::draw_detected_circle(cv::Scalar color)
+{
+	for(auto& a : circles_) circle(*this, {a[0], a[1]}, a[2], color, 1, 8, 0);
+}
+
+void CVMat::edge(int th, int tXr)
+{
+	Canny(*this, *this, th, tXr);
+}
+
+void CVMat::draw_detected_line(cv::Scalar color)
+{
+	for(auto& a : lines_) line(*this, {a[0], a[1]}, {a[2], a[3]}, color, 1, CV_AA);
 }
 
 void CVMat::filter(const Mat& ft)
