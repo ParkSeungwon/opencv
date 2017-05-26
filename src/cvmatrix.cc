@@ -42,6 +42,66 @@ CVMat::CVMat(const cv::Mat& r) : cv::Mat{r}
 	split(*this, bgr_);
 }
 
+vector<DMatch> CVMat::match(const CVMat& r, double thres) const
+{
+	cout << "desc: " << descriptor_.size() << ", " << r.descriptor_.size() << endl;
+	BFMatcher matcher;
+	vector<DMatch> matches;
+	matcher.match(descriptor_, r.descriptor_, matches);
+	cout << "match size " << matches.size() << endl;
+
+	double max_dist = 0; double min_dist = 1000000;
+
+	//-- Quick calculation of max and min distances between keypoints
+	for( int i = 0; i < matches.size(); i++ ) { 
+		double dist = matches[i].distance;
+		if( dist < min_dist ) min_dist = dist;
+		if( dist > max_dist ) max_dist = dist;
+	}
+
+	printf("-- Max dist : %f \n", max_dist );
+	printf("-- Min dist : %f \n", min_dist );
+	double threshold = min_dist + (max_dist - min_dist) * thres;
+
+	//-- Draw only "good" matches (i.e. whose distance is less than 3*min_dist )
+	std::vector< DMatch > good_matches;
+
+	for( int i = 0; i < matches.size(); i++ ) 
+		if(matches[i].distance < threshold) good_matches.push_back( matches[i]);
+	cout << "good matches : " << good_matches.size() << endl;
+	Mat img_matches;
+	drawMatches( *this, keypoints_, r, r.keypoints_, good_matches, img_matches,
+			Scalar::all(-1), Scalar::all(-1), vector<char>(), 2 );
+	//-- Localize the object
+	std::vector<Point2f> obj;
+	std::vector<Point2f> scene;
+
+	for( int i = 0; i < good_matches.size(); i++ ) {
+		//-- Get the keypoints from the good matches
+		obj.push_back( keypoints_[ good_matches[i].queryIdx ].pt );
+		scene.push_back( r.keypoints_[ good_matches[i].trainIdx ].pt );
+	}
+	Mat H = findHomography( obj, scene, CV_RANSAC );
+
+	//-- Get the corners from the image_1 ( the object to be "detected" )
+	std::vector<Point2f> obj_corners(4);
+	obj_corners[0] = cvPoint(0,0); 
+	obj_corners[1] = cvPoint( cols, 0 );
+	obj_corners[2] = cvPoint( cols, rows ); 
+	obj_corners[3] = cvPoint( 0, rows );
+
+	std::vector<Point2f> scene_corners(4);
+	perspectiveTransform( obj_corners, scene_corners, H);
+
+	//-- Draw lines between the corners (the mapped object in the scene - image_2 )
+	line( img_matches, scene_corners[0] + Point2f(cols, 0), scene_corners[1] + Point2f(cols, 0), Scalar(0, 255, 0), 4 );
+	line( img_matches, scene_corners[1] + Point2f(cols, 0), scene_corners[2] + Point2f(cols, 0), Scalar( 0, 255, 0), 4 );
+	line( img_matches, scene_corners[2] + Point2f(cols, 0), scene_corners[3] + Point2f(cols, 0), Scalar( 0, 255, 0), 4 );
+	line( img_matches, scene_corners[3] + Point2f(cols, 0), scene_corners[0] + Point2f(cols, 0), Scalar( 0, 255, 0), 4 );
+	imshow("match", img_matches);
+	return good_matches;
+}
+
 template<typename T> CVMat::CVMat(const Matrix<T>& r) 
 {
 	int w = r.get_width();
@@ -49,6 +109,20 @@ template<typename T> CVMat::CVMat(const Matrix<T>& r)
 	cv::Mat_<T> m{h, w};
 	for(int x=1; x<=w; x++) for(int y=1; y<=h; y++) m.at<T>(y-1, x-1) = r[x][y];
 	cv::Mat::operator=(m);
+}
+
+template<typename T> void CVMat::feature()
+{
+	T module;//T : BRISK or ORB
+	module(*this, noArray(), keypoints_, descriptor_);
+	KeyPointsFilter::removeDuplicated(keypoints_);
+//	KeyPointsFilter::retainBest(keypoints_, 100);
+	cout << keypoints_.size() << " keypoints found" << endl;
+}
+
+void CVMat::draw_feature()
+{
+	drawKeypoints(*this, keypoints_, *this);
 }
 
 void CVMat::corner(float k, int b, int a)
@@ -255,4 +329,6 @@ void CVMat::template_init()
 	CVMat d{Matrix<double>{2,2}};
 	CVMat e{Matrix<int>{2,2}};
 	CVMat f{Matrix<unsigned char>{2,2}};
+	feature<ORB>();
+	feature<BRISK>();
 }

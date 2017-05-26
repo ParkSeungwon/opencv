@@ -3,6 +3,7 @@
 #include<string>
 #include<cv.hpp>
 #include<highgui.h>
+//#include "opencv2/features2d/features2d.hpp"
 
 class CVMat : public cv::Mat
 {
@@ -22,7 +23,7 @@ public:
 	void diffx();//after normalize to float
 	void diffy();
 	void edge(int lowthreshold=30, int thresXratio=100);//Canny
-	void corner(float k = 0.04, int block = 3, int aperture = 3);
+	void corner(float k = 0.04, int block = 3, int aperture = 3);//harris gray->
 	void draw_detected_corner(float thres = 0.01);
 	void detect_line(int threshold=180, int continuous=50, int hop=10);//edge->Hough
 	void detect_circle(int canny_threshold=200, int center_threshold=100,//gray->circ 
@@ -33,13 +34,18 @@ public:
 	void draw_detected_face();
 	void fourier(std::string window = "Fourier");//after gray
 	cv::MatND histo(std::string windwo = "Histogram");//after gray
+	template<typename T> void feature();
+	void draw_feature();
+	std::vector<cv::DMatch> match(const CVMat& r, double thres = 0.5) const;
 	
 protected:
-	cv::Mat save_, harris_;
+	cv::Mat save_, harris_, descriptor_;
 	std::vector<Mat> bgr_;
 	std::vector<cv::Vec4i> lines_;
 	std::vector<cv::Vec3f> circles_;
 	std::vector<cv::Rect> faces_;
+public:
+	std::vector<cv::KeyPoint> keypoints_;
 
 private:
 	void template_init();
@@ -52,3 +58,4 @@ static cv::Mat SHARPEN = Matrix<float>{{0,-1,0},{-1,5,-1},{0,-1,0}};
 //static cv::Mat GAUS = cv::getGaussianKernel(9, 0.5, CV_32F);
 static cv::Mat SOBELX = Matrix<float>{{-1,0,1},{-2,0,2},{-1,0,1}};
 static cv::Mat SOBELY = Matrix<float>{{-1,-2,-1},{0,0,0},{1,2,1}};
+static cv::Mat DIM1 = Matrix<float>{{-1,1,-1,1,-1,1,-1,1}};
