@@ -3,6 +3,7 @@
 #include<string>
 #include<cv.hpp>
 #include<highgui.h>
+#include <opencv2/video/background_segm.hpp>
 //#include "opencv2/features2d/features2d.hpp"
 
 class CVMat : public cv::Mat
@@ -17,6 +18,7 @@ public:
 	void save();
 	void xpm(const char** xpm_content);
 	void gray();
+	void scale(float x, float y);
 	void noise(int scale);//normal distrubution noise
 	void median(int ksize);//median is good for salt&pepper noise
 	void normalize(float a, float b);
@@ -37,6 +39,7 @@ public:
 	template<typename T> void feature();
 	void draw_feature();
 	std::vector<cv::DMatch> match(const CVMat& r, double thres = 0.5) const;
+	CVMat background();
 	
 protected:
 	cv::Mat save_, harris_, descriptor_;
@@ -44,6 +47,7 @@ protected:
 	std::vector<cv::Vec4i> lines_;
 	std::vector<cv::Vec3f> circles_;
 	std::vector<cv::Rect> faces_;
+
 public:
 	std::vector<cv::KeyPoint> keypoints_;
 

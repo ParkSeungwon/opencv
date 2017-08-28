@@ -42,6 +42,11 @@ CVMat::CVMat(const cv::Mat& r) : cv::Mat{r}
 	split(*this, bgr_);
 }
 
+void CVMat::scale(float x, float y)
+{
+	cv::resize(*this, *this, Size{x * cols, y * rows});
+}
+
 vector<DMatch> CVMat::match(const CVMat& r, double thres) const
 {
 	cout << "desc: " << descriptor_.size() << ", " << r.descriptor_.size() << endl;
@@ -141,12 +146,20 @@ void CVMat::draw_detected_corner(float thresh) {
 	cout << n << " corners detected" << endl;
 }
 
+CVMat CVMat::background()
+{
+	static cv::BackgroundSubtractorMOG2 mog2{10, 16, false}; 
+	CVMat mat{Mat()};
+	mog2(*this, mat);
+	return mat;
+}
+
 void CVMat::detect_face()
 {
 	equalizeHist(*this, *this);
 	cv::CascadeClassifier cas;
-	cas.load(haar_dir + haar_cascade[5]);
-	cas.detectMultiScale(*this, faces_, 1.1, 4, cv::CASCADE_SCALE_IMAGE, {30,30});
+	cas.load(haar_dir + haar_cascade[16]);//alt2
+	cas.detectMultiScale(*this, faces_, 1.1, 3, cv::CASCADE_SCALE_IMAGE, {30,30});
 	cout << faces_.size() << " faces detected" << endl;
 }
 

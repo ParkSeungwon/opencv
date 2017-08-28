@@ -31,7 +31,7 @@ int main()
 	namedWindow("camera view");
 	createTrackbar( "hue bar","camera view", &hue, 50, hue_bar);
 	while(1) {
-		cap.set(CV_CAP_PROP_HUE, hue);
+//		cap.set(CV_CAP_PROP_HUE, hue);
 		cap >> frame;
 		putText(frame, to_string(hue),{300,200}, 0,1,{255,0,0});
 		frame.at<unsigned char>(100,100,2) = 20;
