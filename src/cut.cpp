@@ -7,7 +7,7 @@ using namespace cv;
 
 int main()
 {
-	CVMat t = imread("AB.jpg");
+	CVMat t{imread("AB.jpg")};
 	t.gray();
 	t.filter(SOBELX);
 	t.show("corner");

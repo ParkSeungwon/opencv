@@ -1,6 +1,7 @@
 #include"cvmatrix.h"
 #include<random>
 #include<cassert>
+#include<valarray>
 using namespace std;
 using namespace cv;
 
@@ -144,6 +145,14 @@ void CVMat::draw_detected_corner(float thresh) {
 		}
 	}
 	cout << n << " corners detected" << endl;
+}
+
+pair<int, int> CVMat::text(string s, Point p, double scale, Scalar color, int thickness, int fontFace, int lintType, bool bottomleftorigin)
+{
+	putText(*this, s, p, fontFace, scale,color, thickness, lintType, bottomleftorigin);
+	int baseline = 0;
+	Size sz = getTextSize(s, fontFace, scale, thickness, &baseline);
+	return {sz.width, sz.height};
 }
 
 CVMat CVMat::background()

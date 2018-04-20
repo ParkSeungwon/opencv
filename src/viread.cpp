@@ -13,13 +13,10 @@ int main(int ac, char** av)
 //	int h = vid.get(CV_CAP_PROP_FRAME_HEIGHT);
 //	wr.open("wr.avi", CV_FOURCC('D','I','V','4'), 30, Size{w,h});
 	CVMat frame{Matrix<unsigned char>{4,4}};
-	namedWindow("other");
-	int k = 0;
-	while(waitKey(100) == -1) {//wait 10ms, no input during 10ms,then return -1
+	for(int k=0; waitKey(10) == -1; k++) {//wait 10ms, no input during 10ms,then return -1
 		vid >> frame;
 		frame.noise(k++);
-//		wr << frame;
-		imshow("video", frame);
+		frame.show("video");
 	}
 }
 

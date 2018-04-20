@@ -16,6 +16,24 @@ public:
 	void show(std::string title="OpenCV");
 	void restore();
 	void save();
+	
+	std::pair<int, int> text(std::string text_to_draw,//return width and height of text
+			cv::Point lower_left_of_text = {0,20},
+			double scale = 1,//multiply
+			cv::Scalar bgra_color = {0,0,0,255},
+			int thickness = 2, int fontFace = cv::FONT_HERSHEY_SIMPLEX, 
+			int lineType = 8, bool bottomleftorigin = false);
+
+	template<class T> int polyline(const T& x, const T& y, 
+			cv::Scalar color = {0,0,0,255}, int thickness = 2, int shift = 0) {
+		const int sz = x.size();
+		cv::Point pt[sz];
+		const cv::Point* p = pt;
+		for(int i=0; i<sz; i++) pt[i] = {x[i], y[i]};
+		polylines(*this, &p, &sz, 1, false, color, thickness, 8, shift);
+		return sz;
+	}
+
 	void xpm(const char** xpm_content);
 	void gray();
 	void scale(float x, float y);
