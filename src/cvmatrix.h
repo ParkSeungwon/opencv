@@ -1,8 +1,9 @@
 #pragma once
 #include"matrix.h"
 #include<string>
-#include<cv.hpp>
-#include<highgui.h>
+#include<opencv.hpp>
+#include<core.hpp>
+#include<highgui.hpp>
 #include <opencv2/video/background_segm.hpp>
 //#include "opencv2/features2d/features2d.hpp"
 

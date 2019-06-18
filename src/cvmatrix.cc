@@ -113,7 +113,7 @@ template<typename T> CVMat::CVMat(const Matrix<T>& r)
 	int w = r.get_width();
 	int h = r.get_height();
 	cv::Mat_<T> m{h, w};
-	for(int x=1; x<=w; x++) for(int y=1; y<=h; y++) m.at<T>(y-1, x-1) = r[x][y];
+	for(int x=1; x<=w; x++) for(int y=1; y<=h; y++) m.at(y-1, x-1) = r[x][y];
 	cv::Mat::operator=(m);
 }
 
