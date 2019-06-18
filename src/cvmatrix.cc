@@ -108,20 +108,11 @@ vector<DMatch> CVMat::match(const CVMat& r, double thres) const
 	return good_matches;
 }
 
-template<typename T> CVMat::CVMat(const Matrix<T>& r) 
-{
-	int w = r.get_width();
-	int h = r.get_height();
-	cv::Mat_<T> m{h, w};
-	for(int x=1; x<=w; x++) for(int y=1; y<=h; y++) m.at(y-1, x-1) = r[x][y];
-	cv::Mat::operator=(m);
-}
-
 template<typename T> void CVMat::feature()
 {
-	T module;//T : BRISK or ORB
-	module(*this, noArray(), keypoints_, descriptor_);
-	KeyPointsFilter::removeDuplicated(keypoints_);
+//	T module;//T : BRISK or ORB
+//	module(*this, noArray(), keypoints_, descriptor_);
+//	KeyPointsFilter::removeDuplicated(keypoints_);
 //	KeyPointsFilter::retainBest(keypoints_, 100);
 	cout << keypoints_.size() << " keypoints found" << endl;
 }
@@ -157,10 +148,10 @@ pair<int, int> CVMat::text(string s, Point p, double scale, Scalar color, int th
 
 CVMat CVMat::background()
 {
-	static cv::BackgroundSubtractorMOG2 mog2{10, 16, false}; 
-	CVMat mat{Mat()};
-	mog2(*this, mat);
-	return mat;
+//	static cv::BackgroundSubtractorMOG2 mog2{10, 16, false}; 
+//	CVMat mat{Mat()};
+//	mog2(*this, mat);
+//	return mat;
 }
 
 void CVMat::detect_face()
@@ -280,14 +271,6 @@ void CVMat::normalize(float a, float b)
 	cv::normalize(*this, *this, a, b, cv::NORM_MINMAX, CV_32FC1);
 }
 
-array<Matrix<unsigned char>, 4> read_xpm(const char** xpm);
-void CVMat::xpm(const char** x) 
-{
-	auto m = read_xpm(x);
-	vector<Mat> v(m.begin(), m.end());
-	merge(v, *this);
-}
-
 void CVMat::restore()
 {
 	save_.copyTo(*this);
@@ -347,10 +330,6 @@ void CVMat::gray()
 
 void CVMat::template_init()
 {
-	CVMat c{Matrix<float>{2,2}};
-	CVMat d{Matrix<double>{2,2}};
-	CVMat e{Matrix<int>{2,2}};
-	CVMat f{Matrix<unsigned char>{2,2}};
 	feature<ORB>();
 	feature<BRISK>();
 }

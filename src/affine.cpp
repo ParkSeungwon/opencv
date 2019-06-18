@@ -1,6 +1,4 @@
-#include<highgui.h>
-#include<cv.hpp>
-#include"matrix.h"
+#include<opencv.hpp>
 using namespace std;
 using namespace cv;
 
@@ -14,15 +12,15 @@ int main()
 	int cx = image.cols / 2;
 	Point2f center = Point2f(image.rows/2, image.cols/2);
 	
-	Matrix<float> af{4,4};
-	af = af.gltranslate(cx, cy, 0) * af.glrotateZ(M_PI/3) * 
-		af.gltranslate(-cx, -cy, 0);
+	Mat_<float> af(4,4);
+//	af = af.gltranslate(cx, cy, 0) * af.glrotateZ(M_PI/3) * 
+//		af.gltranslate(-cx, -cy, 0);
 	cout << af;
 	//af.glscale(0.9,0.7,1);
-	Matrix<float> affi{3,2};
-	for(int i=1; i<=2; i++) for(int j=1; j<=2; j++) affi[i][j] = af[i][j];//2 dim
-	affi[3][1] = af[4][1];//translate 4->3 앞으로 당긴다.x 평행변환
-	affi[3][2] = af[4][2];
+	Mat_<float> affi(3,2);
+	for(int i=1; i<=2; i++) for(int j=1; j<=2; j++) affi(j,i) = af(j,i);//2 dim
+	affi(1,3) = af(1,4);//translate 4->3 앞으로 당긴다.x 평행변환
+	affi(2,3) = af(2,4);
 	
 	Mat affine_mat = affi;//getAffineTransform(pt1, pt2);
 	cout << affine_mat << endl;

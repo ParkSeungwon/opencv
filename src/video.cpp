@@ -1,5 +1,4 @@
-#include<cxcore.hpp>
-#include<highgui.h>
+#include<opencv.hpp>
 #include<iostream>
 using namespace std;
 using namespace cv;

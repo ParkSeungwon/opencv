@@ -1,5 +1,4 @@
-#include<highgui.h>
-#include<cv.hpp>
+#include<opencv.hpp>
 using namespace std;
 using namespace cv;
 

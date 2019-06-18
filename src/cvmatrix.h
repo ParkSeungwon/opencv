@@ -1,5 +1,4 @@
 #pragma once
-#include"matrix.h"
 #include<string>
 #include<opencv.hpp>
 #include<core.hpp>
@@ -11,14 +10,15 @@ class CVMat : public cv::Mat
 {
 public:
 	CVMat(const cv::Mat& r);
-	template<typename T> CVMat(const Matrix<T>& r);
+	CVMat() = default;
 	operator cv::Mat();
 	void filter(const Mat& m);//apply kernel
 	void show(std::string title="OpenCV");
 	void restore();
 	void save();
+	void read_xpm(const char **xpm);
 	
-	std::pair<int, int> text(std::string text_to_draw,//return width and height of text
+	std::pair<int, int> text(std::string text_to_draw,//return width,height of text
 			cv::Point lower_left_of_text = {0,20},
 			double scale = 1,//multiply
 			cv::Scalar bgra_color = {0,0,0,255},
@@ -35,7 +35,6 @@ public:
 		return sz;
 	}
 
-	void xpm(const char** xpm_content);
 	void gray();
 	void scale(float x, float y);
 	void noise(int scale);//normal distrubution noise
@@ -75,10 +74,10 @@ private:
 };
 
 
-static cv::Mat BLUR = Matrix<float>{{1,1,1},{1,1,1},{1,1,1}} * (1.0f / 9);
-static cv::Mat GAUSSIAN = Matrix<float>{{1,2,1},{2,4,2},{1,2,1}} * (1.0f / 16);
-static cv::Mat SHARPEN = Matrix<float>{{0,-1,0},{-1,5,-1},{0,-1,0}};
+static cv::Mat BLUR = (cv::Mat_<float>(3,3) << 1,1,1,1,1,1,1,1,1) / 9;
+static cv::Mat GAUSSIAN = (cv::Mat_<float>(3,3) << 1,2,1,2,4,2,1,2,1) / 16;;
+static cv::Mat SHARPEN = (cv::Mat_<float>(3,3) << 0,-1,0,-1,5,-1,0,-1,0);
 //static cv::Mat GAUS = cv::getGaussianKernel(9, 0.5, CV_32F);
-static cv::Mat SOBELX = Matrix<float>{{-1,0,1},{-2,0,2},{-1,0,1}};
-static cv::Mat SOBELY = Matrix<float>{{-1,-2,-1},{0,0,0},{1,2,1}};
-static cv::Mat DIM1 = Matrix<float>{{-1,1,-1,1,-1,1,-1,1}};
+static cv::Mat SOBELX = (cv::Mat_<float>(3,3) << -1,0,1,-2,0,2,-1,0,1);
+static cv::Mat SOBELY = (cv::Mat_<float>(3,3) << -1,-2,-1,0,0,0,1,2,1);
+static cv::Mat DIM1 = (cv::Mat_<float>(3,3) << -1,1,-1,1,-1,1,-1,1);

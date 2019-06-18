@@ -34,7 +34,7 @@ int main()
 	t.show("filgr");
 	t.restore();
 
-	CVMat t2 = Matrix<float>{{1,2},{2,1}};
+	CVMat t2{(Mat_<float>(2,2) << 1,2,2,1)};
 	cout << t2.inv();
 
 	VideoCapture cap{0};
@@ -46,7 +46,7 @@ int main()
 		t.show("vidcap");
 	}
 
-	t.xpm(xpm);
+	t.read_xpm(xpm);
 	t.show("bl");
 	waitKey(0);
 }
