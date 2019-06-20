@@ -52,19 +52,50 @@ void CVMat::rotate(double angle, Point center, double scale) {
 	warpAffine(*this, *this, getRotationMatrix2D(center, angle, scale), size());
 }
 
-void CVMat::transform3(Point2f src[3], Point2f dst[3]) {
-	warpAffine(*this, *this, getAffineTransform(src, dst), size());
+void CVMat::transform3(Point2f src[3], Point2f dst[3], Size sz) {
+	warpAffine(*this, *this, getAffineTransform(src, dst), (sz == Size{0,0}) ? size() : sz);
+}
+void CVMat::detect_contours(int mode, int method) 
+{
+	findContours(*this, contours_, hierachy_, mode, method);
+}
+void CVMat::draw_detected_contours(int thickness, int linetype, int maxlevel) 
+{
+	static uniform_int_distribution<> di{0, 255};
+	static random_device rd;
+	for(int i=0; i<contours_.size(); i++)
+		drawContours(*this, contours_, i, {di(rd), di(rd), di(rd)}, thickness,
+				linetype, hierachy_, maxlevel);
+}
+void CVMat::transform4(Point2f src[4], Point2f dst[4], Size sz)
+{
+	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), (sz == Size{0,0}) ? size() : sz);
 }
 
-void CVMat::transform4(Point2f src[4], Point2f dst[4])
+void CVMat::get_business_card()
 {
-	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), size());
-}
-
-void CVMat::get_business_card(Point2f src[4])
-{
+	Mat tmp;
+	copyTo(tmp);
+	gray();
+	filter(GAUSSIAN);
+	edge();
+	
+	detect_contours(RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	auto it = max_element(contours_.begin(), contours_.end(),
+			[](const vector<Point> &a, const vector<Point> &b) {
+				return a.size() < b.size();
+			}
+		);
+	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
+	for(auto &[x, y] : *it) {
+		if(x + y < xy[0].x + xy[0].y) xy[0] = {x, y};
+		if(x - y > xy[1].x - xy[1].y) xy[1] = {x, y};
+		if(y - x > xy[2].y - xy[2].x) xy[2] = {x, y};
+		if(x + y > xy[3].x + xy[3].y) xy[3] = {x, y};
+	}
 	Point2f dst[4] = {{0,0}, {419, 0}, {0,239}, {419, 239}};
-	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), {420, 240});
+	tmp.copyTo(*this);
+	transform4(xy, dst, {420, 240});
 }
 vector<DMatch> CVMat::match(const CVMat& r, double thres) const
 {
