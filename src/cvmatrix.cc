@@ -43,11 +43,29 @@ CVMat::CVMat(const cv::Mat& r) : cv::Mat{r}
 	split(*this, bgr_);
 }
 
-void CVMat::scale(float x, float y)
-{
+void CVMat::scale(float x, float y) {
 	cv::resize(*this, *this, Size{x * cols, y * rows});
 }
 
+void CVMat::rotate(double angle, Point center, double scale) {
+	if(center == Point{-1,-1}) center = {cols/2, rows/2};
+	warpAffine(*this, *this, getRotationMatrix2D(center, angle, scale), size());
+}
+
+void CVMat::transform3(Point2f src[3], Point2f dst[3]) {
+	warpAffine(*this, *this, getAffineTransform(src, dst), size());
+}
+
+void CVMat::transform4(Point2f src[4], Point2f dst[4])
+{
+	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), size());
+}
+
+void CVMat::get_business_card(Point2f src[4])
+{
+	Point2f dst[4] = {{0,0}, {419, 0}, {0,239}, {419, 239}};
+	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), {420, 240});
+}
 vector<DMatch> CVMat::match(const CVMat& r, double thres) const
 {
 	cout << "desc: " << descriptor_.size() << ", " << r.descriptor_.size() << endl;

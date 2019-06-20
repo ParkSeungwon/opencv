@@ -3,28 +3,26 @@
 #define NDEBUG
 using namespace std;
 using namespace cv;
+CVMat t;
+int thres;
+void callback(int, void*) {
+	t.restore();
+	t.draw_detected_corner(thres * 0.001);
+	t.show("corner");
+}
 
 int main(int ac, char** av)
 {
-	if(ac < 3) {
-		cout << av[0] << " [file1] [file2]" << endl;
-		return 0;
-	}
-	CVMat t = imread(av[1]);
+	t = imread("card2.jpg");
+	t.scale(0.3,0.3);
+	t.save();
 	t.gray();
-	t.feature<BRISK>();
+	t.filter(GAUSSIAN);
+	t.edge();
+	t.corner();
 	t.restore();
-//	t.draw_feature();
 	t.show("corner");
-	CVMat t2 = imread(av[2]);
-	t2.gray();
-	t2.feature<BRISK>();
-	t2.restore();
-//	t2.draw_feature();
-	t2.show("t2");
-	
-	auto matches = t.match(t2, 0.5);
-	
+	createTrackbar("threshold", "corner", &thres, 200, callback);
 	waitKey(0);
 }
 

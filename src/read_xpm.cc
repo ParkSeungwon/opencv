@@ -24,11 +24,10 @@ void CVMat::read_xpm(const char** xpm) {
 	ss >> w >> h >> color >> ch;
 
 	map<string, cv::Scalar_<unsigned char>> color_map;
-	for(int i=0; i<color; i++) 
+	for(int i=0; i<color; i++)//make colormap
 		color_map[string(xpm[i+1], ch)] = change(xpm[i+1] + ch + 3);
-	create(w, h, CV_8UC4);
-
-	for(int y=0; y<h; y++) for(int x=0; x<w; x++) 
+	create(w, h, CV_8UC4);//header creation
+	for(int y=0; y<h; y++) for(int x=0; x<w; x++)//populate pixels
 		at<Scalar_<unsigned char>>(y, x) = color_map[string(xpm[color+1+y] + x*ch, ch)];
 }
 

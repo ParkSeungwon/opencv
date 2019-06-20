@@ -58,6 +58,10 @@ public:
 	void draw_feature();
 	std::vector<cv::DMatch> match(const CVMat& r, double thres = 0.5) const;
 	CVMat background();
+	void rotate(double angle, cv::Point center={-1,-1}, double scale=1);
+	void transform3(cv::Point2f src[3], cv::Point2f dst[3]);//Affine
+	void transform4(cv::Point2f src[4], cv::Point2f dst[4]);//perspective
+	void get_business_card(cv::Point2f src[4]);
 	
 protected:
 	cv::Mat save_, harris_, descriptor_;
