@@ -2,6 +2,7 @@
 #include<iostream>
 #include"option.h"
 #include"cvmatrix.h"
+#include<opencv2/text/ocr.hpp>
 #define NDEBUG
 using namespace std;
 using namespace cv;
@@ -44,6 +45,16 @@ int main(int ac, char** av)
 //	}
 	t.get_business_card();
 	t.show("final");
+	auto a = cv::text::OCRTesseract::create();
+	string s;
+	vector<Rect> vr; vector<string> vs; vector<float> vf;
+	a->run(t, s, &vr, &vs, &vf);
+	cout << s << endl;
+	for(int i=0; i<vr.size(); i++) {
+		imshow(vs[i] + to_string(vf[i]), t(vr[i]));
+		cout << vr[i] <<' '<< vf[i] <<' '<< vs[i] << endl;
+	}
 	waitKey(0);
 }
-
+//P(C1 | information, system) 
+//		= k * P(information | C1) * P(system | C1) * P(C1)

@@ -80,12 +80,10 @@ void CVMat::get_business_card()
 	filter(GAUSSIAN);
 	edge();
 	
-	detect_contours(RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	detect_contours(RETR_EXTERNAL);
 	auto it = max_element(contours_.begin(), contours_.end(),
 			[](const vector<Point> &a, const vector<Point> &b) {
-				return a.size() < b.size();
-			}
-		);
+				return a.size() < b.size(); });
 	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
 	for(auto &[x, y] : *it) {
 		if(x + y < xy[0].x + xy[0].y) xy[0] = {x, y};

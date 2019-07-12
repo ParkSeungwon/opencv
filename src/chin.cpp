@@ -7,6 +7,7 @@ int main(int ac, char** av)
 {
 	if(ac < 2) return 0;
 	CVMat t = imread(av[1]);
+	namedWindow("original", WINDOW_NORMAL);
 	t.show("original");
 	t.gray();
 	

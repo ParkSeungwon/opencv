@@ -354,12 +354,23 @@ const char * xpm[] = {
 int main()
 {
 	CVMat m = imread("Lenna.png");
-	m.show("Lenna.png");
+	CVMat m2;
+	m2.read_xpm(xpm);
+	m2.scale(3,3);
+	m2.show("blender");
+	Mat roi{m, Rect{m.cols - m2.cols, m.rows - m2.rows, m2.cols, m2.rows}};
+	m2.save();
+	m2.gray();
+	Mat mask{m2};
+	m2.restore();
+	m2.copyTo(roi, mask);
+//	roi = Scalar{0,0,0};
+	m.show();
+	imshow("roi", roi);
 	cout << m.rows << 'x' << m.cols << " channel : " << m.channels() << ", depth : " << m.depth() << endl;;
-	m.read_xpm(xpm);
-	m.scale(4,4);
-	m.show("blender");
-	cout << m.rows << 'x' << m.cols << " channel : " << m.channels() << ", depth : " << m.depth() << endl;;
+
+	CVMat mm{m.t() * 0.2 + m * 0.8};
+	mm.show("add");
 	waitKey(0);
 }
 

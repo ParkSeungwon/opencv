@@ -13,7 +13,7 @@ int main(int ac, char** av)
 	t.edge();
 	t.detect_contours();
 	t.restore();
-	t.draw_detected_contours(2);
+	t.draw_detected_contours(1);
 	t.show();
 	waitKey(0);
 }
