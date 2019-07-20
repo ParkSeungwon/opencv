@@ -35,3 +35,7 @@ test
 *.vim
 *.avi
 *.jpg
+find
+.
+-size
++3M
