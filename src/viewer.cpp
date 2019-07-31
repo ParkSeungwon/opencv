@@ -25,8 +25,9 @@ int main(int ac, char **av)
 	for(const auto &a : opt.get<FileExpansion>("image_files")) 
 		v.push_back(imread(a.string()).t());
 	if(v.empty()) return -1;
+	map<int, int> count;
 	for(int i=1; i<v.size(); i++) if(v[i].rows != v[0].rows) return i;
-	hconcat(v, m);//^ check if concat is possibe, return the index of different width
+	hconcat(v, m);//^ check if concat is possibe or return the index of different width.
 	flip(m, m, 1);
 	for(int start = m.cols - w; start > -w + o; ) {
 		start = min(m.cols - w, start);

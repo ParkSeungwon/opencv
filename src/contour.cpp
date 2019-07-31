@@ -45,7 +45,7 @@ int main(int ac, char** av)
 //	}
 	t.get_business_card();
 	t.show("final");
-	auto a = cv::text::OCRTesseract::create();
+	auto a = cv::text::OCRTesseract::create(NULL, "eng+kor");
 	string s;
 	vector<Rect> vr; vector<string> vs; vector<float> vf;
 	a->run(t, s, &vr, &vs, &vf);
