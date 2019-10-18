@@ -37,7 +37,7 @@ int main(int ac, char** av) {
 	auto it = min_element(distance_normal.begin(), distance_normal.end());
 
 	//find four corners
-	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
+	Point2i xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
 	for(const auto &[x, y] : contours[it - distance_normal.begin()]) {
 		if(x + y < xy[0].x + xy[0].y) xy[0] = {x, y};
 		if(x - y > xy[1].x - xy[1].y) xy[1] = {x, y};
@@ -55,15 +55,13 @@ int main(int ac, char** av) {
 	m.gray();
 	for(int x=0; x<m.cols; x++) for(int y=0; y<m.rows; y++) {
 		auto &a = m.at<unsigned char>(y, x);
-		if(a < 200) a = 255;
-		else a = 0;
+		a = a < 200 ? 255 : 0;
 	}
 
 	//ocr apply
-	auto a = cv::text::OCRTesseract::create(NULL, "eng");
 	string s;
 	vector<Rect> vr; vector<string> vs; vector<float> vf;
-	a->run(m, s, &vr, &vs, &vf);
+	cv::text::OCRTesseract::create(NULL, "eng")->run(m, s, &vr, &vs, &vf);
 	cout << s;
 //	for(int i=0; i<vr.size(); i++) {
 //		imshow(vs[i] + to_string(vf[i]), m(vr[i]));
