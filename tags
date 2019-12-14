@@ -1,0 +1,351 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BLUR	src/cvmatrix.h	84;"	v
+CLICK	src/cvui.h	1091;"	d
+CLICK	src/cvui.h	1113;"	m	namespace:cvui
+CMDoption	src/option.cc	6;"	f	class:CMDoption
+CMDoption	src/option.h	8;"	c
+COLUMN	src/cvui.h	1089;"	d
+COLUMN	src/cvui.h	1111;"	m	namespace:cvui
+CVMat	src/cvmatrix.cc	40;"	f	class:CVMat
+CVMat	src/cvmatrix.h	9;"	c	inherits:cv::Mat
+CVUI_ANTIALISED	src/cvui.h	1047;"	d
+CVUI_ANTIALISED	src/cvui.h	1049;"	d
+CVUI_FILLED	src/cvui.h	1051;"	d
+CVUI_IMPLEMENTATION	src/button.cpp	11;"	d	file:
+CVUI_IMPLEMENTATION	src/cvui.cpp	5;"	d	file:
+DIM1	src/cvmatrix.h	90;"	v
+DOWN	src/cvui.h	1090;"	d
+DOWN	src/cvui.h	1112;"	m	namespace:cvui
+FileExpansion	src/option.h	26;"	c
+GAUSSIAN	src/cvmatrix.h	85;"	v
+IS_DOWN	src/cvui.h	1095;"	d
+IS_DOWN	src/cvui.h	1117;"	m	namespace:cvui
+LEFT_BUTTON	src/cvui.h	1096;"	d
+LEFT_BUTTON	src/cvui.h	1120;"	m	namespace:cvui
+MIDDLE_BUTTON	src/cvui.h	1097;"	d
+MIDDLE_BUTTON	src/cvui.h	1121;"	m	namespace:cvui
+NDEBUG	src/busi.cpp	3;"	d	file:
+NDEBUG	src/captcha.cpp	7;"	d	file:
+NDEBUG	src/contour.cpp	6;"	d	file:
+NDEBUG	src/corner.cpp	3;"	d	file:
+NDEBUG	src/cut.cpp	4;"	d	file:
+OUT	src/cvui.h	1093;"	d
+OUT	src/cvui.h	1115;"	m	namespace:cvui
+OVER	src/cvui.h	1092;"	d
+OVER	src/cvui.h	1114;"	m	namespace:cvui
+RIGHT_BUTTON	src/cvui.h	1098;"	d
+RIGHT_BUTTON	src/cvui.h	1122;"	m	namespace:cvui
+ROW	src/cvui.h	1088;"	d
+ROW	src/cvui.h	1110;"	m	namespace:cvui
+SHARPEN	src/cvmatrix.h	86;"	v
+SOBELX	src/cvmatrix.h	88;"	v
+SOBELY	src/cvmatrix.h	89;"	v
+TRACKBAR_DISCRETE	src/cvui.h	1127;"	m	namespace:cvui
+TRACKBAR_HIDE_LABELS	src/cvui.h	1130;"	m	namespace:cvui
+TRACKBAR_HIDE_MIN_MAX_LABELS	src/cvui.h	1128;"	m	namespace:cvui
+TRACKBAR_HIDE_SEGMENT_LABELS	src/cvui.h	1125;"	m	namespace:cvui
+TRACKBAR_HIDE_STEP_SCALE	src/cvui.h	1126;"	m	namespace:cvui
+TRACKBAR_HIDE_VALUE_LABEL	src/cvui.h	1129;"	m	namespace:cvui
+TrackbarParams	src/cvui.h	1187;"	s	namespace:cvui::internal
+TrackbarParams	src/cvui.h	1195;"	f	struct:cvui::internal::TrackbarParams
+UP	src/cvui.h	1094;"	d
+UP	src/cvui.h	1116;"	m	namespace:cvui
+VERSION	src/cvui.h	1087;"	d
+VERSION	src/cvui.h	1108;"	m	namespace:cvui
+WINDOW_NAME	src/button.cpp	14;"	d	file:
+WINDOW_NAME	src/cvui.cpp	8;"	d	file:
+_CVUI_COMPILE_MESSAGE	src/cvui.h	1062;"	d
+_CVUI_COMPILE_MESSAGE	src/cvui.h	1077;"	d
+_CVUI_H_	src/cvui.h	59;"	d
+_CVUI_IMPLEMENTATION_NOTICE	src/cvui.h	1081;"	d
+_CVUI_NO_IMPLEMENTATION_NOTICE	src/cvui.h	1082;"	d
+__cvui_max	src/cvui.h	1073;"	d
+__cvui_min	src/cvui.h	1069;"	d
+anchor	src/cvui.h	1137;"	m	struct:cvui::__anon1
+anyButton	src/cvui.h	1165;"	m	struct:cvui::__anon4
+args	src/option.cc	11;"	f	class:CMDoption
+background	src/cvmatrix.cc	196;"	f	class:CVMat
+backprojMode	src/camshift.cpp	11;"	v
+begin	src/cvui.h	1457;"	f	namespace:cvui::internal
+begin	src/option.h	33;"	f	class:FileExpansion
+beginColumn	src/cvui.h	2332;"	f	namespace:cvui
+beginColumn	src/cvui.h	2345;"	f	namespace:cvui
+beginRow	src/cvui.h	2324;"	f	namespace:cvui
+beginRow	src/cvui.h	2340;"	f	namespace:cvui
+bgr_	src/cvmatrix.h	70;"	m	class:CVMat
+bitsetHas	src/cvui.h	1402;"	f	namespace:cvui::internal
+blockStackEmpty	src/cvui.h	1432;"	f	namespace:cvui::internal
+button	src/cvui.h	1639;"	f	namespace:cvui::internal
+button	src/cvui.h	1673;"	f	namespace:cvui::internal
+button	src/cvui.h	1681;"	f	namespace:cvui::internal
+button	src/cvui.h	1876;"	f	namespace:cvui::render
+button	src/cvui.h	2243;"	f	namespace:cvui
+button	src/cvui.h	2248;"	f	namespace:cvui
+button	src/cvui.h	2253;"	f	namespace:cvui
+button	src/cvui.h	2357;"	f	namespace:cvui
+button	src/cvui.h	2362;"	f	namespace:cvui
+button	src/cvui.h	2367;"	f	namespace:cvui
+buttonLabel	src/cvui.h	1911;"	f	namespace:cvui::render
+buttons	src/cvui.h	1164;"	m	struct:cvui::__anon4
+callback	src/corner.cpp	8;"	f
+callback	src/detectline.cpp	8;"	f
+change	src/read_xpm.cc	7;"	f
+checkbox	src/cvui.h	1713;"	f	namespace:cvui::internal
+checkbox	src/cvui.h	2063;"	f	namespace:cvui::render
+checkbox	src/cvui.h	2263;"	f	namespace:cvui
+checkbox	src/cvui.h	2377;"	f	namespace:cvui
+checkboxCheck	src/cvui.h	2081;"	f	namespace:cvui::render
+checkboxLabel	src/cvui.h	2076;"	f	namespace:cvui::render
+circles_	src/cvmatrix.h	72;"	m	class:CVMat
+clamp01	src/cvui.h	1582;"	f	namespace:cvui::internal
+cont	src/detectline.cpp	7;"	v
+context	src/cvui.h	2200;"	f	namespace:cvui
+contours_	src/cvmatrix.h	74;"	m	class:CVMat
+corner	src/cvmatrix.cc	172;"	f	class:CVMat
+counter	src/cvui.h	1757;"	f	namespace:cvui::internal
+counter	src/cvui.h	1778;"	f	namespace:cvui::internal
+counter	src/cvui.h	1941;"	f	namespace:cvui::render
+counter	src/cvui.h	2295;"	f	namespace:cvui
+counter	src/cvui.h	2300;"	f	namespace:cvui
+counter	src/cvui.h	2409;"	f	namespace:cvui
+counter	src/cvui.h	2414;"	f	namespace:cvui
+createLabel	src/cvui.h	1526;"	f	namespace:cvui::internal
+cvui	src/cvui.h	1345;"	n
+cvui	src/cvui.h	70;"	n
+cvui_block_t	src/cvui.h	1140;"	t	namespace:cvui	typeref:struct:cvui::__anon1
+cvui_context_t	src/cvui.h	1173;"	t	namespace:cvui	typeref:struct:cvui::__anon5
+cvui_label_t	src/cvui.h	1153;"	t	namespace:cvui	typeref:struct:cvui::__anon2
+cvui_mouse_btn_t	src/cvui.h	1160;"	t	namespace:cvui	typeref:struct:cvui::__anon3
+cvui_mouse_t	src/cvui.h	1167;"	t	namespace:cvui	typeref:struct:cvui::__anon4
+descriptor_	src/cvmatrix.h	69;"	m	class:CVMat
+detectAndDisplay	src/face.cpp	12;"	f
+detect_circle	src/cvmatrix.cc	337;"	f	class:CVMat
+detect_contours	src/cvmatrix.cc	58;"	f	class:CVMat
+detect_face	src/cvmatrix.cc	204;"	f	class:CVMat
+detect_line	src/cvmatrix.cc	331;"	f	class:CVMat
+diffx	src/cvmatrix.cc	303;"	f	class:CVMat
+diffy	src/cvmatrix.cc	309;"	f	class:CVMat
+draw_detected_circle	src/cvmatrix.cc	343;"	f	class:CVMat
+draw_detected_contours	src/cvmatrix.cc	62;"	f	class:CVMat
+draw_detected_corner	src/cvmatrix.cc	177;"	f	class:CVMat
+draw_detected_face	src/cvmatrix.cc	213;"	f	class:CVMat
+draw_detected_line	src/cvmatrix.cc	353;"	f	class:CVMat
+draw_feature	src/cvmatrix.cc	167;"	f	class:CVMat
+edge	src/cvmatrix.cc	348;"	f	class:CVMat
+end	src/cvui.h	1478;"	f	namespace:cvui::internal
+end	src/option.h	34;"	f	class:FileExpansion
+endColumn	src/cvui.h	2336;"	f	namespace:cvui
+endRow	src/cvui.h	2328;"	f	namespace:cvui
+error	src/cvui.h	1406;"	f	namespace:cvui::internal
+eyes_cascade	src/face.cpp	10;"	v
+faces_	src/cvmatrix.h	73;"	m	class:CVMat
+feature	src/cvmatrix.cc	158;"	f	class:CVMat
+fill	src/cvui.h	1136;"	m	struct:cvui::__anon1
+filter	src/cvmatrix.cc	358;"	f	class:CVMat
+findMinMax	src/cvui.h	1508;"	f	namespace:cvui::internal
+fourier	src/cvmatrix.cc	248;"	f	class:CVMat
+gBuffer	src/cvui.h	1182;"	m	namespace:cvui::internal
+gContexts	src/cvui.h	1181;"	m	namespace:cvui::internal
+gCurrentContext	src/cvui.h	1180;"	m	namespace:cvui::internal
+gDefaultContext	src/cvui.h	1179;"	m	namespace:cvui::internal
+gDelayWaitKey	src/cvui.h	1184;"	m	namespace:cvui::internal
+gLastKeyPressed	src/cvui.h	1183;"	m	namespace:cvui::internal
+gScreen	src/cvui.h	1185;"	m	namespace:cvui::internal
+gStack	src/cvui.h	1205;"	m	namespace:cvui::internal
+gStackCount	src/cvui.h	1206;"	m	namespace:cvui::internal
+gTrackbarMarginX	src/cvui.h	1207;"	m	namespace:cvui::internal
+get	src/option.h	13;"	f	class:CMDoption
+getContext	src/cvui.h	1381;"	f	namespace:cvui::internal
+get_business_card	src/cvmatrix.cc	75;"	f	class:CVMat
+gray	src/cvmatrix.cc	373;"	f	class:CVMat
+haar_cascade	src/cvmatrix.cc	10;"	v	file:
+haar_dir	src/cvmatrix.cc	8;"	v	file:
+handleMouse	src/cvui.h	2458;"	f	namespace:cvui
+harris_	src/cvmatrix.h	69;"	m	class:CVMat
+hasShortcut	src/cvui.h	1149;"	m	struct:cvui::__anon2
+help	src/camshift.cpp	56;"	f	file:
+hexToScalar	src/cvui.h	1556;"	f	namespace:cvui::internal
+hierachy_	src/cvmatrix.h	71;"	m	class:CVMat
+histo	src/cvmatrix.cc	225;"	f	class:CVMat
+hop	src/detectline.cpp	7;"	v
+hot_keys	src/camshift.cpp	47;"	v
+hue_bar	src/video.cpp	6;"	f
+iarea	src/cvui.h	1614;"	f	namespace:cvui::internal
+iarea	src/cvui.h	2320;"	f	namespace:cvui
+image	src/cvui.h	1702;"	f	namespace:cvui::internal
+image	src/cvui.h	1937;"	f	namespace:cvui::render
+image	src/cvui.h	2258;"	f	namespace:cvui
+image	src/cvui.h	2372;"	f	namespace:cvui
+imshow	src/cvui.h	2204;"	f	namespace:cvui
+init	src/cvui.h	1374;"	f	namespace:cvui::internal
+init	src/cvui.h	2167;"	f	namespace:cvui
+init	src/cvui.h	2172;"	f	namespace:cvui
+internal	src/cvui.h	1177;"	n	namespace:cvui
+internal	src/cvui.h	1350;"	n	namespace:cvui
+isMouseButton	src/cvui.h	1352;"	f	namespace:cvui::internal
+justPressed	src/cvui.h	1158;"	m	struct:cvui::__anon3
+justReleased	src/cvui.h	1157;"	m	struct:cvui::__anon3
+keypoints_	src/cvmatrix.h	77;"	m	class:CVMat
+keys	src/camshift.cpp	66;"	v
+labelFormat	src/cvui.h	1193;"	m	struct:cvui::internal::TrackbarParams
+lastKeyPressed	src/cvui.h	2209;"	f	namespace:cvui
+lbp_cascade	src/cvmatrix.cc	34;"	v	file:
+lbp_dir	src/cvmatrix.cc	9;"	v	file:
+lines_	src/cvmatrix.h	71;"	m	class:CVMat
+main	src/aff2.cpp	12;"	f
+main	src/affine.cpp	5;"	f
+main	src/alpha.cpp	7;"	f
+main	src/back.cpp	5;"	f
+main	src/busi.cpp	7;"	f
+main	src/button.cpp	16;"	f
+main	src/camshift.cpp	71;"	f
+main	src/captcha.cpp	12;"	f
+main	src/chin.cpp	6;"	f
+main	src/contour.cpp	10;"	f
+main	src/corner.cpp	14;"	f
+main	src/cut.cpp	8;"	f
+main	src/cvui.cpp	10;"	f
+main	src/detectline.cpp	19;"	f
+main	src/edge.cpp	6;"	f
+main	src/erode.cpp	5;"	f
+main	src/face.cpp	38;"	f
+main	src/face2.cpp	6;"	f
+main	src/filter.cpp	7;"	f
+main	src/fou.cpp	7;"	f
+main	src/gethist.cpp	6;"	f
+main	src/main_init3.cpp	21;"	f
+main	src/nor.cpp	6;"	f
+main	src/pyramid.cpp	6;"	f
+main	src/split.cpp	7;"	f
+main	src/test.cpp	5;"	f
+main	src/text.cpp	23;"	f
+main	src/vec.cpp	5;"	f
+main	src/video.cpp	8;"	f
+main	src/viewer.cpp	6;"	f
+main	src/viread.cpp	8;"	f
+main	src/xpm.cpp	354;"	f
+makeTrackbarParams	src/cvui.h	1254;"	f	namespace:cvui::internal
+match	src/cvmatrix.cc	98;"	f	class:CVMat
+max	src/cvui.h	1074;"	d
+max	src/cvui.h	1189;"	m	struct:cvui::internal::TrackbarParams
+max	src/cvui.h	2498;"	d
+median	src/cvmatrix.cc	368;"	f	class:CVMat
+merge1	src/main_init3.cpp	19;"	v
+merge2	src/main_init3.cpp	19;"	v
+min	src/cvui.h	1070;"	d
+min	src/cvui.h	1188;"	m	struct:cvui::internal::TrackbarParams
+min	src/cvui.h	2495;"	d
+mouse	src/cvui.h	1172;"	m	struct:cvui::__anon5
+mouse	src/cvui.h	2213;"	f	namespace:cvui
+mouse	src/cvui.h	2217;"	f	namespace:cvui
+mouse	src/cvui.h	2221;"	f	namespace:cvui
+mouse	src/cvui.h	2228;"	f	namespace:cvui
+mouse	src/cvui.h	2232;"	f	namespace:cvui
+noise	src/cvmatrix.cc	296;"	f	class:CVMat
+normalize	src/cvmatrix.cc	316;"	f	class:CVMat
+onMouse	src/camshift.cpp	20;"	f	file:
+onMouse	src/main_init3.cpp	8;"	f
+onTrackbar	src/main_init3.cpp	60;"	f
+on_mouse	src/text.cpp	11;"	f
+on_trackbar	src/text.cpp	16;"	f
+operator +	src/option.h	29;"	f	class:FileExpansion
+operator cv::Mat	src/cvmatrix.cc	218;"	f	class:CVMat
+options	src/cvui.h	1192;"	m	struct:cvui::internal::TrackbarParams
+options_	src/option.h	19;"	m	class:CMDoption
+origin	src/camshift.cpp	15;"	v
+padding	src/cvui.h	1138;"	m	struct:cvui::__anon1
+polyline	src/cvmatrix.h	28;"	f	class:CVMat
+popBlock	src/cvui.h	1448;"	f	namespace:cvui::internal
+position	src/cvui.h	1166;"	m	struct:cvui::__anon4
+pressed	src/cvui.h	1159;"	m	struct:cvui::__anon3
+print_help	src/option.cc	42;"	f	class:CMDoption
+printf	src/cvui.h	2273;"	f	namespace:cvui
+printf	src/cvui.h	2284;"	f	namespace:cvui
+printf	src/cvui.h	2387;"	f	namespace:cvui
+printf	src/cvui.h	2398;"	f	namespace:cvui
+pushBlock	src/cvui.h	1444;"	f	namespace:cvui::internal
+putText	src/cvui.h	1889;"	f	namespace:cvui::render
+putTextCentered	src/cvui.h	1901;"	f	namespace:cvui::render
+read_xpm	src/read_xpm.cc	20;"	f	class:CVMat
+rect	src/cvui.h	1135;"	m	struct:cvui::__anon1
+rect	src/cvui.h	1834;"	f	namespace:cvui::internal
+rect	src/cvui.h	2121;"	f	namespace:cvui::render
+rect	src/cvui.h	2310;"	f	namespace:cvui
+rect	src/cvui.h	2424;"	f	namespace:cvui
+render	src/cvui.h	1291;"	n	namespace:cvui
+render	src/cvui.h	1870;"	n	namespace:cvui
+resetMouseButton	src/cvui.h	1368;"	f	namespace:cvui::internal
+resetRenderingBuffer	src/cvui.h	1565;"	f	namespace:cvui::internal
+restore	src/cvmatrix.cc	321;"	f	class:CVMat
+rotate	src/cvmatrix.cc	50;"	f	class:CVMat
+save	src/cvmatrix.cc	326;"	f	class:CVMat
+save_	src/cvmatrix.h	69;"	m	class:CVMat
+scale	src/cvmatrix.cc	46;"	f	class:CVMat
+scale	src/detectline.cpp	7;"	v
+segments	src/cvui.h	1191;"	m	struct:cvui::internal::TrackbarParams
+selectObject	src/camshift.cpp	12;"	v
+selection	src/camshift.cpp	16;"	v
+shortcut	src/cvui.h	1150;"	m	struct:cvui::__anon2
+show	src/cvmatrix.cc	363;"	f	class:CVMat
+showHist	src/camshift.cpp	14;"	v
+slider	src/text.cpp	10;"	v
+smin	src/camshift.cpp	17;"	v
+source_window	src/aff2.cpp	8;"	v
+space	src/cvui.h	2350;"	f	namespace:cvui
+sparkline	src/cvui.h	1850;"	f	namespace:cvui::internal
+sparkline	src/cvui.h	2144;"	f	namespace:cvui::render
+sparkline	src/cvui.h	2315;"	f	namespace:cvui
+sparkline	src/cvui.h	2429;"	f	namespace:cvui
+sprintf_s	src/cvui.h	1057;"	d
+step	src/cvui.h	1190;"	m	struct:cvui::internal::TrackbarParams
+template_init	src/cvmatrix.cc	378;"	f	class:CVMat
+text	src/cvmatrix.cc	188;"	f	class:CVMat
+text	src/cvui.h	1743;"	f	namespace:cvui::internal
+text	src/cvui.h	1872;"	f	namespace:cvui::render
+text	src/cvui.h	2268;"	f	namespace:cvui
+text	src/cvui.h	2382;"	f	namespace:cvui
+textAfterShortcut	src/cvui.h	1152;"	m	struct:cvui::__anon2
+textBeforeShortcut	src/cvui.h	1151;"	m	struct:cvui::__anon2
+thres	src/corner.cpp	7;"	v
+thres	src/detectline.cpp	7;"	v
+topBlock	src/cvui.h	1436;"	f	namespace:cvui::internal
+trackObject	src/camshift.cpp	13;"	v
+trackbar	src/cvui.h	1268;"	f	namespace:cvui::internal
+trackbar	src/cvui.h	1279;"	f	namespace:cvui::internal
+trackbar	src/cvui.h	1315;"	f	namespace:cvui
+trackbar	src/cvui.h	1321;"	f	namespace:cvui
+trackbar	src/cvui.h	1799;"	f	namespace:cvui::internal
+trackbar	src/cvui.h	2044;"	f	namespace:cvui::render
+trackbarForceValuesAsMultiplesOfSmallStep	src/cvui.h	1589;"	f	namespace:cvui::internal
+trackbarHandle	src/cvui.h	1951;"	f	namespace:cvui::render
+trackbarPath	src/cvui.h	1979;"	f	namespace:cvui::render
+trackbarSegmentLabel	src/cvui.h	2006;"	f	namespace:cvui::render
+trackbarSegments	src/cvui.h	2024;"	f	namespace:cvui::render
+trackbarSteps	src/cvui.h	1990;"	f	namespace:cvui::render
+trackbarValueToXPixel	src/cvui.h	1606;"	f	namespace:cvui::internal
+trackbarXPixelToValue	src/cvui.h	1598;"	f	namespace:cvui::internal
+transform3	src/cvmatrix.cc	55;"	f	class:CVMat
+transform4	src/cvmatrix.cc	70;"	f	class:CVMat
+type	src/cvui.h	1139;"	m	struct:cvui::__anon1
+update	src/cvui.h	2434;"	f	namespace:cvui
+updateLayoutFlow	src/cvui.h	1412;"	f	namespace:cvui::internal
+v	src/option.h	36;"	m	class:FileExpansion
+value	src/main_init3.cpp	7;"	v
+vmax	src/camshift.cpp	17;"	v
+vmin	src/camshift.cpp	17;"	v
+vsprintf_s	src/cvui.h	1056;"	d
+warp_rotate_window	src/aff2.cpp	10;"	v
+warp_window	src/aff2.cpp	9;"	v
+watch	src/cvui.h	2180;"	f	namespace:cvui
+where	src/cvui.h	1134;"	m	struct:cvui::__anon1
+window	src/cvui.h	1823;"	f	namespace:cvui::internal
+window	src/cvui.h	2086;"	f	namespace:cvui::render
+window	src/cvui.h	2305;"	f	namespace:cvui
+window	src/cvui.h	2419;"	f	namespace:cvui
+windowName	src/cvui.h	1171;"	m	struct:cvui::__anon5
+xpm	src/xpm.cpp	7;"	v
