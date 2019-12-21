@@ -7,9 +7,9 @@ int main(int ac, char **av)
 {
 	CMDoption opt{
 		{"image_files", "image files", FileExpansion{}},
-		{"width", "showing width", 1366},
-		{"height", "showing height", 760},
-		{"windowed", "window mode, default full screen", false},
+		{"width", "showing width", 2500},
+		{"height", "showing height", 1500},
+		{"fullscreen", "full screen, default window mode", false},
 		{"rotate", "view rotated", false},
 		{"overlap", "overlap pixel", 100},
 		{"resize", "magnify or shrink image", 1.0}
@@ -20,7 +20,7 @@ int main(int ac, char **av)
 	int h = opt.get<int>("height");
 	int o = opt.get<int>("overlap");
 	namedWindow("viewer", CV_WINDOW_NORMAL);
-	if(!opt.get<bool>("windowed"))
+	if(opt.get<bool>("fullscreen"))
 		cvSetWindowProperty("viewer", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
 	Mat m;
 	vector<Mat> v;

@@ -32,6 +32,7 @@ public:
 	}
 	auto begin() { return v.begin(); }
 	auto end() { return v.end(); }
+	bool empty() { return v.empty();}
 protected:
 	std::vector<std::experimental::filesystem::path> v;
 };
