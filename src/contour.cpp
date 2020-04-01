@@ -80,6 +80,8 @@ int main(int ac, char** av)
 		if(regex_match(a, m, e)) cout << "ok";
 		cout << endl;
 	}
+
+//
 //	for(int i=0; i<vr.size(); i++) {
 //		imshow(vs[i] + to_string(vf[i]), t(vr[i]));
 //		cout << vr[i] <<' '<< vf[i] <<' '<< vs[i] << endl;

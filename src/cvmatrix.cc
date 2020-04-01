@@ -81,7 +81,7 @@ vector<Point2f> CVMat::get_points(int k)
 	filter(GAUSSIAN);
 	edge();
 	
-	detect_contours(RETR_EXTERNAL);
+	detect_contours(RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 //	auto it = max_element(contours_.begin(), contours_.end(),
 //			[](const vector<Point> &a, const vector<Point> &b) {
 //				return a.size() < b.size(); });
