@@ -63,7 +63,7 @@ public:
 	void rotate(double angle, cv::Point center={-1,-1}, double scale=1);
 	void transform3(cv::Point2f src[3], cv::Point2f dst[3], cv::Size sz = {0,0});
 	void transform4(cv::Point2f src[4], cv::Point2f dst[4], cv::Size sz = {0,0});
-	std::vector<cv::Point2f> get_points(int k);// ^ affine and perspective transform
+	std::vector<cv::Point> get_points(int k);// ^ affine and perspective transform
 	
 protected:
 	cv::Mat save_, harris_, descriptor_;

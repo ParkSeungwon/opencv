@@ -45,6 +45,7 @@ int main(int ac, char** av)
 //	}
 
 	auto v = t.get_points(4);
+	t.draw_detected_contours();
 	vector<float> x, y;
 	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
 	for(auto &[x, y] : v) {

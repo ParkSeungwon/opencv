@@ -72,7 +72,7 @@ void CVMat::transform4(Point2f src[4], Point2f dst[4], Size sz)
 	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), (sz == Size{0,0}) ? size() : sz);
 }
 
-vector<Point2f> CVMat::get_points(int k)
+vector<Point> CVMat::get_points(int k)
 {
 	Mat tmp;
 	copyTo(tmp);
@@ -93,17 +93,13 @@ vector<Point2f> CVMat::get_points(int k)
 //		if(x + y > xy[3].x + xy[3].y) xy[3] = {x, y};
 //	}
 	
-	vector<vector<Point2f>> vapprox;
-	for(auto a : contours_) {
-		vector<Point2f> approx;
-		approxPolyDP(Mat(a), approx, arcLength(Mat(a), true)*0.01, true);
-		if(approx.size() == k && isContourConvex(approx) && 
-				fabs(contourArea(Mat(approx))) > 100) vapprox.push_back(approx);
-	}
 	tmp.copyTo(*this);
-	return *max_element(vapprox.begin(), vapprox.end(), [](vector<Point2f> a,
-				vector<Point2f> b) {
-			return fabs(contourArea(Mat(a))) < fabs(contourArea(Mat(b))); });
+	auto it = remove_if(contours_.begin(), contours_.end(), 
+			[](const vector<Point> &p) { return p.size() != 4; });
+	contours_.erase(it, contours_.end());
+	return *max_element(contours_.cbegin(), contours_.cend(), 
+			[](const vector<Point> &a, const vector<Point> &b) {
+			return contourArea(a,false) < contourArea(b, false); });
 }
 
 vector<DMatch> CVMat::match(const CVMat& r, double thres) const
