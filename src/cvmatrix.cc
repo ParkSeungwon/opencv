@@ -1,7 +1,11 @@
-#include"cvmatrix.h"
+#include<tuple>
+#include<cmath>
+#include<complex>
 #include<random>
 #include<cassert>
 #include<valarray>
+#include"cvmatrix.h"
+#include"combi.h"
 using namespace std;
 using namespace cv;
 
@@ -72,38 +76,53 @@ void CVMat::transform4(Point2f src[4], Point2f dst[4], Size sz)
 	warpPerspective(*this, *this, getPerspectiveTransform(src, dst), (sz == Size{0,0}) ? size() : sz);
 }
 
-vector<Point2f> CVMat::get_points(int k)
+vector<Point> CVMat::get_points(int k)
 {
 	Mat tmp;
 	copyTo(tmp);
 	gray();
-//	equalizeHist(*this, *this);
-	filter(GAUSSIAN);
+	equalizeHist(*this, *this);
+//	filter(GAUSSIAN);
 	edge();
 	
-	detect_contours(RETR_EXTERNAL);
+	detect_contours(RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+//	contours_.erase(remove_if(contours_.begin(), contours_.end(), [](vector<Point> p) {
+//				return p.size() != 4;}), contours_.end());
 //	auto it = max_element(contours_.begin(), contours_.end(),
 //			[](const vector<Point> &a, const vector<Point> &b) {
 //				return a.size() < b.size(); });
-//	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
+//	vector<Point2f> vapprox = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
 //	for(auto &[x, y] : *it) {
-//		if(x + y < xy[0].x + xy[0].y) xy[0] = {x, y};
-//		if(x - y > xy[1].x - xy[1].y) xy[1] = {x, y};
-//		if(y - x > xy[2].y - xy[2].x) xy[2] = {x, y};
-//		if(x + y > xy[3].x + xy[3].y) xy[3] = {x, y};
+//		if(x + y < vapprox[0].x + vapprox[0].y) vapprox[0] = {x, y};
+//		if(x - y > vapprox[1].x - vapprox[1].y) vapprox[1] = {x, y};
+//		if(y - x > vapprox[2].y - vapprox[2].x) vapprox[2] = {x, y};
+//		if(x + y > vapprox[3].x + vapprox[3].y) vapprox[3] = {x, y};
 //	}
 	
-	vector<vector<Point2f>> vapprox;
-	for(auto a : contours_) {
-		vector<Point2f> approx;
-		approxPolyDP(Mat(a), approx, arcLength(Mat(a), true)*0.01, true);
-		if(approx.size() == k && isContourConvex(approx) && 
-				fabs(contourArea(Mat(approx))) > 100) vapprox.push_back(approx);
-	}
+//	for(auto a : contours_) {
+//		vector<Point2f> approx;
+//		approxPolyDP(Mat(a), approx, arcLength(Mat(a), true)*0.01, true);
+//		if(approx.size() == k && isContourConvex(approx) && 
+//				fabs(contourArea(Mat(approx))) > 100) vapprox.push_back(approx);
+//	}
 	tmp.copyTo(*this);
-	return *max_element(vapprox.begin(), vapprox.end(), [](vector<Point2f> a,
-				vector<Point2f> b) {
+	return contours_.empty() ? vector<Point>{{0,0}, {0,10}, {10,0}, {10,10}} : 
+		*max_element( contours_.begin(), contours_.end(), [](vector<Point> a, vector<Point> b) {
 			return fabs(contourArea(Mat(a))) < fabs(contourArea(Mat(b))); });
+}
+
+void CVMat::get_businesscard(vector<Point2f> v)
+{
+	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
+	for(auto &[x, y] : v) {
+		if(x + y < xy[0].x + xy[0].y) xy[0] = {x, y};
+		if(x - y > xy[1].x - xy[1].y) xy[1] = {x, y};
+		if(y - x > xy[2].y - xy[2].x) xy[2] = {x, y};
+		if(x + y > xy[3].x + xy[3].y) xy[3] = {x, y};
+	}
+	const int width = 630, height = 360;
+	Point2f dst[4] = {{0,0}, {width-1, 0}, {0,height-1}, {width-1, height-1}};
+	transform4(xy, dst, {width, height});//{420, 240});
 }
 
 vector<DMatch> CVMat::match(const CVMat& r, double thres) const
@@ -343,6 +362,68 @@ void CVMat::detect_line(int th, int c, int h)
 {
 	HoughLinesP(*this, lines_, 1, M_PI/180, th, c, h);
 	cout << lines_.size() << " lines detected\n";
+}
+
+static optional<complex<double>> solve(complex<double> a, complex<double> b,
+		complex<double> c, complex<double> d) {//cross point of vector a + kb and c + ld
+	if(arg(b) == arg(d) || arg(b) + M_PI == arg(d)) return {};//-pie < arg() <pie
+	if(b == 0i || d == 0i) return {};
+	if(a == c) return a;
+	double argA = abs(arg(b) - arg(c - a));
+	double argC = abs(arg(d) - arg(a - c));
+	if(argA > M_PI) argA = argA - M_PI;
+	if(argC > M_PI) argC = argC - M_PI;//l canb minus
+	double l = abs(a - c) * sin(argA) / sin(M_PI - argA - argC);//a/sinA=b/sinB=2R
+	return c + l / abs(d) * d;
+}
+
+static double distance(Vec4i a, Vec4i b)
+{//approx distance between two parallel line
+	complex<double> p1{a[0], a[1]}, p2{a[2], a[3]}, p3{b[0], b[1]}, p4{b[2], b[3]};
+	complex<double> p5 = p1 + 0.5 * (p2 - p1);
+	double argp = arg(p2 - p1) + M_PI * 0.5;
+	if(auto a = solve(p5, polar(1., argp), p3, p4 - p3)) return abs(p5 - *a);
+	else return 0;
+}
+
+bool is_similar_angle(double a, double b)
+{
+	return (abs(a - b) < M_PI/8 || abs(a - b - M_PI) < M_PI/8) ? true : false;
+}
+
+void CVMat::get_rect()
+{
+	if(lines_.size() < 4) return ;
+	vector<double> args;
+	for(auto a : lines_) {
+		complex<double> p1{a[0], a[1]}, p2{a[2], a[3]};
+		args.push_back(arg(p2 - p1));
+	}
+	vector<tuple<int, int, double>> idxes;//line idx and distance between line
+	nCr ncr{args.size(), 2};
+	while(ncr.next()) {
+		int i=ncr[0]-1, j=ncr[1]-1;
+		if(is_similar_angle(args[i], args[j]))
+			if(double dist = distance(lines_[i], lines_[j]); dist > 100)
+				idxes.push_back(make_tuple(i, j, dist));
+	}
+	if(idxes.size() < 2) return;
+	nCr ncr2{idxes.size(), 2};
+	while(ncr2.next()) {
+		int i=ncr2[0]-1, j=ncr2[1]-1;
+		if(is_similar_angle(args[get<0>(idxes[i])] - args[get<0>(idxes[j])], M_PI/2)) {
+			double l1 = get<2>(idxes[i]), l2 = get<2>(idxes[j]);
+			double width = max(l1, l2), height = min(l1, l2);
+			if(abs(height/width - 4./7) < 2./7) {
+				int aa[] = {get<0>(idxes[i]), get<1>(idxes[i]), get<0>(idxes[j]), get<1>(idxes[j])};
+				sort(aa, aa+4);
+				for(int i=0; i<4; i++) lines_[i] = lines_[aa[i]];
+				lines_.erase(lines_.begin() + 4, lines_.end());
+				draw_detected_line();
+				break;
+			}
+		}
+	}
 }
 
 void CVMat::detect_circle(int can, int ct, int min, int max)
