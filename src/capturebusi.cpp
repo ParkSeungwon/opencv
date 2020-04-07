@@ -7,21 +7,32 @@ using namespace cv;
 int main(int ac, char** av)
 {
 	VideoCapture cap(0);
+	cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+	cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
 	if(!cap.isOpened()) {
 		cout << "카메라가 연결되지 않았습니다." << endl;
 		exit(-1);
 	}
 	CVMat frame;
+	Mat m[5];
+	int i = 0;
 	while(1) {
 		cap >> frame;
 		frame.save();
 		frame.gray();
 		frame.edge();
-		frame.detect_line(130, 100, 100);
+		frame.detect_line(130, 150, 100);
 		
 		frame.restore();
-		frame.get_rect();
+		auto a = frame.get_rect();
+		frame.draw_detected_line({255, 0,0});
 		frame.show();
+		if(a) {
+			frame.restore();
+			frame.get_businesscard(*a);
+			frame.copyTo(m[i]);
+			frame.show(to_string(i++));
+		}
 
 //		auto v = frame.get_points(4);
 //		vector<float> x, y;
@@ -31,6 +42,14 @@ int main(int ac, char** av)
 //		}
 //		frame.polyline(x, y, {255, 0,0});
 //		frame.show();
+		if(i == 5) {
+			if(char c = waitKey(); c == 'q') break;
+			else if('0' <= c && c <= '4') {
+				imwrite("card-out.jpg", m[c - '0']);
+				break;
+			}
+			i = 0;
+		}
 		if(waitKey(100) == 'q') break;
 	}
 }

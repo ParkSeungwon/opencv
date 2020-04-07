@@ -46,7 +46,7 @@ public:
 	void corner(float k = 0.04, int block = 3, int aperture = 3);//harris gray->
 	void draw_detected_corner(float thres = 0.01);
 	void detect_line(int threshold=180, int continuous=50, int hop=10);//edge->Hough
-	void get_rect();
+	std::optional<std::vector<cv::Point>> get_rect();
 	void detect_circle(int canny_threshold=200, int center_threshold=100,//gray->circ 
 			int min_radius=0, int max_radius=0);//gradient를 보므로 edge로 하면 안됨.
 	void detect_face();//gray->face
@@ -65,7 +65,7 @@ public:
 	void transform3(cv::Point2f src[3], cv::Point2f dst[3], cv::Size sz = {0,0});
 	void transform4(cv::Point2f src[4], cv::Point2f dst[4], cv::Size sz = {0,0});
 	std::vector<cv::Point> get_points(int k);// ^ affine and perspective transform
-	void get_businesscard(std::vector<cv::Point2f> v);
+	void get_businesscard(std::vector<cv::Point> v);
 	
 protected:
 	cv::Mat save_, harris_, descriptor_;

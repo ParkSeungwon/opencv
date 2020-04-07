@@ -77,15 +77,15 @@ void CVMat::transform4(Point2f src[4], Point2f dst[4], Size sz)
 }
 
 vector<Point> CVMat::get_points(int k)
-{
+{//gray -> edge -> get_points
 	Mat tmp;
 	copyTo(tmp);
 	gray();
-	equalizeHist(*this, *this);
-//	filter(GAUSSIAN);
+//	equalizeHist(*this, *this);
+	filter(GAUSSIAN);
 	edge();
 	
-	detect_contours(RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	detect_contours(RETR_EXTERNAL);
 //	contours_.erase(remove_if(contours_.begin(), contours_.end(), [](vector<Point> p) {
 //				return p.size() != 4;}), contours_.end());
 //	auto it = max_element(contours_.begin(), contours_.end(),
@@ -99,19 +99,20 @@ vector<Point> CVMat::get_points(int k)
 //		if(x + y > vapprox[3].x + vapprox[3].y) vapprox[3] = {x, y};
 //	}
 	
-//	for(auto a : contours_) {
-//		vector<Point2f> approx;
-//		approxPolyDP(Mat(a), approx, arcLength(Mat(a), true)*0.01, true);
-//		if(approx.size() == k && isContourConvex(approx) && 
-//				fabs(contourArea(Mat(approx))) > 100) vapprox.push_back(approx);
-//	}
+	vector<vector<Point>> vapprox;
+	for(auto a : contours_) {
+		vector<Point> approx;
+		approxPolyDP(Mat(a), approx, arcLength(Mat(a), true)*0.01, true);
+		if(approx.size() == k && isContourConvex(approx) && 
+				fabs(contourArea(Mat(approx))) > 100) vapprox.push_back(approx);
+	}
 	tmp.copyTo(*this);
-	return contours_.empty() ? vector<Point>{{0,0}, {0,10}, {10,0}, {10,10}} : 
-		*max_element( contours_.begin(), contours_.end(), [](vector<Point> a, vector<Point> b) {
+	return vapprox.empty() ? vector<Point>{{0,0}, {0,10}, {10,0}, {10,10}} : 
+		*max_element( vapprox.begin(), vapprox.end(), [](vector<Point> a, vector<Point> b) {
 			return fabs(contourArea(Mat(a))) < fabs(contourArea(Mat(b))); });
 }
 
-void CVMat::get_businesscard(vector<Point2f> v)
+void CVMat::get_businesscard(vector<Point> v)
 {
 	Point2f xy[4] = {{9000,9000}, {0, 1000}, {1000, 0}, {0,0}};
 	for(auto &[x, y] : v) {
@@ -364,7 +365,7 @@ void CVMat::detect_line(int th, int c, int h)
 	cout << lines_.size() << " lines detected\n";
 }
 
-static optional<complex<double>> solve(complex<double> a, complex<double> b,
+static optional<complex<double>> intersect(complex<double> a, complex<double> b,
 		complex<double> c, complex<double> d) {//cross point of vector a + kb and c + ld
 	if(arg(b) == arg(d) || arg(b) + M_PI == arg(d)) return {};//-pie < arg() <pie
 	if(b == 0i || d == 0i) return {};
@@ -377,23 +378,29 @@ static optional<complex<double>> solve(complex<double> a, complex<double> b,
 	return c + l / abs(d) * d;
 }
 
+static optional<complex<double>> intersect(Vec4i a, Vec4i b)
+{
+	complex<double> p1{a[0], a[1]}, p2{a[2], a[3]}, p3{b[0], b[1]}, p4{b[2], b[3]};
+	return intersect(p1, p2 - p1, p3, p4 - p3);
+}
+
 static double distance(Vec4i a, Vec4i b)
 {//approx distance between two parallel line
 	complex<double> p1{a[0], a[1]}, p2{a[2], a[3]}, p3{b[0], b[1]}, p4{b[2], b[3]};
 	complex<double> p5 = p1 + 0.5 * (p2 - p1);
 	double argp = arg(p2 - p1) + M_PI * 0.5;
-	if(auto a = solve(p5, polar(1., argp), p3, p4 - p3)) return abs(p5 - *a);
+	if(auto a = intersect(p5, polar(1., argp), p3, p4 - p3)) return abs(p5 - *a);
 	else return 0;
 }
 
 bool is_similar_angle(double a, double b)
 {
-	return (abs(a - b) < M_PI/8 || abs(a - b - M_PI) < M_PI/8) ? true : false;
+	return (abs(a - b) < M_PI/32 || abs(a - b - M_PI) < M_PI/32) ? true : false;
 }
 
-void CVMat::get_rect()
+optional<vector<Point>> CVMat::get_rect()
 {
-	if(lines_.size() < 4) return ;
+	if(lines_.size() < 4) return {};
 	vector<double> args;
 	for(auto a : lines_) {
 		complex<double> p1{a[0], a[1]}, p2{a[2], a[3]};
@@ -404,26 +411,31 @@ void CVMat::get_rect()
 	while(ncr.next()) {
 		int i=ncr[0]-1, j=ncr[1]-1;
 		if(is_similar_angle(args[i], args[j]))
-			if(double dist = distance(lines_[i], lines_[j]); dist > 100)
+			if(double dist = distance(lines_[i], lines_[j]); dist > rows / 3)
 				idxes.push_back(make_tuple(i, j, dist));
 	}
-	if(idxes.size() < 2) return;
+	if(idxes.size() < 2) return {};
 	nCr ncr2{idxes.size(), 2};
 	while(ncr2.next()) {
 		int i=ncr2[0]-1, j=ncr2[1]-1;
 		if(is_similar_angle(args[get<0>(idxes[i])] - args[get<0>(idxes[j])], M_PI/2)) {
 			double l1 = get<2>(idxes[i]), l2 = get<2>(idxes[j]);
 			double width = max(l1, l2), height = min(l1, l2);
-			if(abs(height/width - 4./7) < 2./7) {
+			if(abs(height/width - 4./7) < 1./20) {
 				int aa[] = {get<0>(idxes[i]), get<1>(idxes[i]), get<0>(idxes[j]), get<1>(idxes[j])};
-				sort(aa, aa+4);
-				for(int i=0; i<4; i++) lines_[i] = lines_[aa[i]];
-				lines_.erase(lines_.begin() + 4, lines_.end());
-				draw_detected_line();
-				break;
+				auto a = intersect(lines_[aa[0]], lines_[aa[2]]);
+				auto b = intersect(lines_[aa[0]], lines_[aa[3]]);
+				auto c = intersect(lines_[aa[1]], lines_[aa[2]]);
+				auto d = intersect(lines_[aa[1]], lines_[aa[3]]);
+//				sort(aa, aa+4);
+//				for(int i=0; i<4; i++) lines_[i] = lines_[aa[i]];
+//				lines_.erase(lines_.begin() + 4, lines_.end());
+				return vector<Point>{{a->real(), a->imag()}, {b->real(), b->imag()},
+					{c->real(), c->imag()}, {d->real(), d->imag()}};
 			}
 		}
 	}
+	return {};
 }
 
 void CVMat::detect_circle(int can, int ct, int min, int max)
