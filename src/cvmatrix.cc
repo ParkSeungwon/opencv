@@ -104,10 +104,11 @@ vector<Point> CVMat::get_points(int k)
 		vector<Point> approx;
 		approxPolyDP(Mat(a), approx, arcLength(Mat(a), true)*0.01, true);
 		if(approx.size() == k && isContourConvex(approx) && 
-				fabs(contourArea(Mat(approx))) > 100) vapprox.push_back(approx);
+				fabs(contourArea(Mat(approx))) > 10000) vapprox.push_back(approx);
 	}
 	tmp.copyTo(*this);
-	return vapprox.empty() ? vector<Point>{{0,0}, {0,10}, {10,0}, {10,10}} : 
+	return vapprox.empty() ? vector<Point>{{cols/3,rows/3}, {cols/3,2*rows/3},
+		{2*cols/3,2*rows/3}, {2*cols/3,rows/3}} : 
 		*max_element( vapprox.begin(), vapprox.end(), [](vector<Point> a, vector<Point> b) {
 			return fabs(contourArea(Mat(a))) < fabs(contourArea(Mat(b))); });
 }

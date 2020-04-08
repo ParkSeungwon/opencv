@@ -8,10 +8,11 @@ using namespace cv;
 CVMat m;
 vector<Point> v;
 void on_mouse_event(int event, int x, int y, int flags, void* param ) {
-	static vector<Point>::iterator it;
-	if(event == 1) it = find_if(v.begin(), v.end(),
+	static vector<Point>::iterator it = v.end();
+	if(event == 1) it = find_if(v.begin(), v.end(),//left button down
 				[x, y](Point p) {return abs(p.x - x) < 10 && abs(p.y - y) < 10;});
-	else if(event == 4) {
+	else if(event == 4) it = v.end();//left button up
+	else if(event == 0 && it != v.end()) {//drag
 		it->x = x;
 		it->y = y;
 		m.restore();
