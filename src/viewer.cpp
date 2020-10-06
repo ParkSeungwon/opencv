@@ -19,7 +19,6 @@ int main(int ac, char **av)
 	int w = opt.get<int>("width");
 	int h = opt.get<int>("height");
 	int o = opt.get<int>("overlap");
-	namedWindow("viewer", CV_WINDOW_NORMAL);
 	if(opt.get<bool>("fullscreen"))
 		cvSetWindowProperty("viewer", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
 	Mat m;

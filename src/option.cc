@@ -42,7 +42,7 @@ bool CMDoption::args(int ac, char **av)
 bool CMDoption::print_help(char *av0)
 {
 	cout << "usage : " << av0 << " [options] [value]\n";
-	cout << "you should use at least distinguishable amount of characters of options\nif default is boolean you don't need value\n\navailable options\n";
+	cout << "you should use at least distinguishable amount of characters of options\nif default is boolean you don't need value\navailable options\n";
 	for(auto& [pa, desc, val] : options_) {
 		cout << '-' << pa << " : " << desc << "(default ";
 		if(val.type() == typeid(int)) cout << any_cast<int>(val);

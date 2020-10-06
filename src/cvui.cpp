@@ -26,9 +26,10 @@ int main(int argc, const char *argv[])
 		// Update cvui stuff and show everything on the screen
 		cvui::imshow(WINDOW_NAME, frame);
 
-		if (cv::waitKey(20) == 27) {
-			break;
-		}
+		int x, y, w, h;
+		//cv::getWindowImageRect(WINDOW_NAME, x, y, w, h);
+		if (char c = cv::waitKey(20); c == 'q') break;
+		else if(c == 'd') cv::moveWindow(WINDOW_NAME, 300, 300);
 	}
 
 	return 0;
