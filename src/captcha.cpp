@@ -14,7 +14,7 @@ int main(int ac, char** av) {
 	
 	//find template position
 	m.save();
-	matchTemplate(m, tmpl, result, CV_TM_SQDIFF);//use reload icon as template
+	matchTemplate(m, tmpl, result, TM_SQDIFF);//use reload icon as template
 	double min, max; Point minpos, maxpos;
 	minMaxLoc(result, &min, &max, &minpos, &maxpos);
 //	cout << minpos << endl;

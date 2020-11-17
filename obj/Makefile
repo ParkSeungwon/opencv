@@ -1,7 +1,7 @@
 CC = g++
 OBJ = $(wildcard *.o)
 EXE = $(patsubst %.x, ../%.x, $(wildcard *.x))
-opencvLIB = $(shell pkg-config opencv --libs)
+opencvLIB = $(shell pkg-config opencv4 --libs)
 
 all : $(EXE)
 

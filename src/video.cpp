@@ -14,12 +14,12 @@ int main()
 		exit(-1);
 	}
 
-	int w = cap.get(CV_CAP_PROP_FRAME_WIDTH);
-	int h = cap.get(CV_CAP_PROP_FRAME_HEIGHT);
-	//cout << cap.get(CV_CAP_PROP_EXPOSURE) << endl;
-	cout << cap.get(CV_CAP_PROP_BRIGHTNESS) << endl;
+	int w = cap.get(CAP_PROP_FRAME_WIDTH);
+	int h = cap.get(CAP_PROP_FRAME_HEIGHT);
+	//cout << cap.geV_CAP_PROP_EXPOSURE) << endl;
+	cout << cap.get(CAP_PROP_BRIGHTNESS) << endl;
 
-	writer.open("1.avi", CV_FOURCC('D','I','V','4'), 30, Size{w,h});
+	writer.open("1.avi", FOURCC('D','I','V','4'), 30, Size{w,h});
 	if(!writer.isOpened()) {
 		cout << "카메라 write error 연결되지 않았습니다." << endl;
 		exit(-1);

@@ -8,7 +8,7 @@ int main(int argc, char ** argv)
 {
     const char* filename = argc >=2 ? argv[1] : "Lenna.png";
 
-    Mat I = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
+    Mat I = imread(filename, LOAD_IMAGE_GRAYSCALE);
     if( I.empty())
         return -1;
 

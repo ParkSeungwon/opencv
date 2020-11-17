@@ -20,7 +20,7 @@ int main(int ac, char **av)
 	int h = opt.get<int>("height");
 	int o = opt.get<int>("overlap");
 	if(opt.get<bool>("fullscreen"))
-		cvSetWindowProperty("viewer", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+		setWindowProperty("viewer", WND_PROP_FULLSCREEN, WINDOW_FULLSCREEN);
 	Mat m;
 	vector<Mat> v;
 	for(const auto &a : opt.get<FileExpansion>("image_files")) 

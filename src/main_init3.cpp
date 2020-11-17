@@ -7,13 +7,13 @@ using namespace std;
 int value;
 void onMouse(int event, int x, int y, int flags, void* param) {
 	switch(event) {
-	case CV_EVENT_LBUTTONDOWN: 
+	case EVENT_LBUTTONDOWN: 
 		cout << "mouse left button at " << x << ',' <<y << endl; break;
-	case CV_EVENT_RBUTTONDOWN: cout << "mouse right button" << endl; break;
-	case CV_EVENT_MBUTTONDOWN: cout << "mouse middle button" << endl; break;
-	case CV_EVENT_LBUTTONUP: cout << "mouse left button up" << endl; break;
-	case CV_EVENT_MBUTTONUP: cout << "mouse middle up" << endl; break;
-	case CV_EVENT_RBUTTONUP: cout << "mouse right up" << endl; break;
+	case EVENT_RBUTTONDOWN: cout << "mouse right button" << endl; break;
+	case EVENT_MBUTTONDOWN: cout << "mouse middle button" << endl; break;
+	case EVENT_LBUTTONUP: cout << "mouse left button up" << endl; break;
+	case EVENT_MBUTTONUP: cout << "mouse middle up" << endl; break;
+	case EVENT_RBUTTONUP: cout << "mouse right up" << endl; break;
 	}
 }
 Mat merge1, merge2;

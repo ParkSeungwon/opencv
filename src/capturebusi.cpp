@@ -7,8 +7,8 @@ using namespace cv;
 int main(int ac, char** av)
 {
 	VideoCapture cap(0);
-	cap.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-	cap.set(CV_CAP_PROP_FRAME_HEIGHT,720);
+	cap.set(CAP_PROP_FRAME_WIDTH, 1280);
+	cap.set(CAP_PROP_FRAME_HEIGHT,720);
 	if(!cap.isOpened()) {
 		cout << "카메라가 연결되지 않았습니다." << endl;
 		exit(-1);
