@@ -155,8 +155,8 @@ vector<DMatch> CVMat::match(const CVMat& r, double thres) const
 		if(matches[i].distance < threshold) good_matches.push_back( matches[i]);
 	cout << "good matches : " << good_matches.size() << endl;
 	Mat img_matches;
-	drawMatches( *this, keypoints_, r, r.keypoints_, good_matches, img_matches,
-			Scalar::all(-1), Scalar::all(-1), vector<char>(), 2 );
+	drawMatches( static_cast<Mat>(*this), keypoints_, static_cast<Mat>(r), r.keypoints_, good_matches, img_matches);
+			//Scalar::all(-1), Scalar::all(-1), vector<char>(), 2 );
 	//-- Localize the object
 	std::vector<Point2f> obj;
 	std::vector<Point2f> scene;
@@ -166,14 +166,14 @@ vector<DMatch> CVMat::match(const CVMat& r, double thres) const
 		obj.push_back( keypoints_[ good_matches[i].queryIdx ].pt );
 		scene.push_back( r.keypoints_[ good_matches[i].trainIdx ].pt );
 	}
-	Mat H = findHomography( obj, scene, CV_RANSAC );
+	Mat H = findHomography( obj, scene, RANSAC );
 
 	//-- Get the corners from the image_1 ( the object to be "detected" )
 	std::vector<Point2f> obj_corners(4);
-	obj_corners[0] = cvPoint(0,0); 
-	obj_corners[1] = cvPoint( cols, 0 );
-	obj_corners[2] = cvPoint( cols, rows ); 
-	obj_corners[3] = cvPoint( 0, rows );
+	obj_corners[0] = Point(0,0); 
+	obj_corners[1] = Point( cols, 0 );
+	obj_corners[2] = Point( cols, rows ); 
+	obj_corners[3] = Point( 0, rows );
 
 	std::vector<Point2f> scene_corners(4);
 	perspectiveTransform( obj_corners, scene_corners, H);
@@ -321,7 +321,7 @@ void CVMat::fourier(string window)
     q2.copyTo(q1);
     tmp.copyTo(q2);
 
-	cv::normalize(magI, magI, 0, 1, CV_MINMAX);//Transform the matrix with float values into a
+	cv::normalize(magI, magI, 0, 1, NORM_MINMAX);//Transform the matrix with float values into a
 	imshow(window, magI);
 }
 
@@ -441,7 +441,7 @@ optional<vector<Point>> CVMat::get_rect()
 
 void CVMat::detect_circle(int can, int ct, int min, int max)
 {
-	HoughCircles(*this, circles_, CV_HOUGH_GRADIENT, 1, rows/8, can, ct, min, max);
+	HoughCircles(*this, circles_, HOUGH_GRADIENT, 1, rows/8, can, ct, min, max);
 	cout << circles_.size() << " circles detected\n";
 }
 
@@ -457,7 +457,7 @@ void CVMat::edge(int th, int tXr)
 
 void CVMat::draw_detected_line(cv::Scalar color)
 {
-	for(auto& a : lines_) line(*this, {a[0], a[1]}, {a[2], a[3]}, color, 1, CV_AA);
+	for(auto& a : lines_) line(*this, {a[0], a[1]}, {a[2], a[3]}, color, 1);//, CV_AA);
 }
 
 void CVMat::filter(const Mat& ft)
@@ -477,7 +477,7 @@ void CVMat::median(int k)
 
 void CVMat::gray()
 {
-	cvtColor(*this, *this, CV_BGR2GRAY);
+	cvtColor(*this, *this, COLOR_BGR2GRAY);
 }
 
 void CVMat::template_init()
