@@ -8,6 +8,7 @@
 #include"combi.h"
 using namespace std;
 using namespace cv;
+using namespace qrcodegen;
 
 static string haar_dir = "/usr/share/opencv/haarcascades/";
 static string lbp_dir = "/usr/share/opencv/lbpcascades/";
@@ -45,6 +46,20 @@ CVMat::CVMat(const cv::Mat& r) : cv::Mat{r}
 {
 	save_ = clone();
 	split(*this, bgr_);
+}
+
+CVMat::CVMat(const QrCode& qr, int scale, int border) 
+	: cv::Mat
+    { qr.getSize() * scale + 2 * border * scale
+		, qr.getSize() * scale + 2 * border * scale
+		, CV_32FC1
+		, Scalar(1)
+		}
+{
+	int sz = qr.getSize();
+	for(int y=0; y<sz; y++) for(int x=0; x<sz; x++) 
+		(*this)(cv::Rect((border + x) * scale, (border + y) * scale, scale, scale)) 
+			= Scalar(qr.getModule(x, y));
 }
 
 void CVMat::scale(float x, float y) {
@@ -281,15 +296,17 @@ void CVMat::fourier(string window)
 {
 	using namespace cv;
     Mat padded;                            //expand input image to optimal size
-    int m = getOptimalDFTSize( rows );
-    int n = getOptimalDFTSize( cols ); // on the border add zero values
-    copyMakeBorder(*this, padded, 0,m-rows,0,n-cols, BORDER_CONSTANT, Scalar::all(0));
+		this->convertTo(padded, CV_32FC1, 1.0 / 255.0);
+    //int m = getOptimalDFTSize( rows );
+    //int n = getOptimalDFTSize( cols ); // on the border add zero values
+    //copyMakeBorder(*this, padded, 0,m-rows,0,n-cols, BORDER_CONSTANT, Scalar::all(0));
 
-    Mat planes[] = {Mat_<float>(padded), Mat::zeros(padded.size(), CV_32F)};
+    Mat planes[] = {padded, Mat::zeros(padded.size(), CV_32F)};
     Mat complexI;
     merge(planes, 2, complexI);  // Add to the expanded another plane with zeros
 
-    dft(complexI, complexI);     // this way the result may fit in the source matrix
+    dft(complexI, complexI, DFT_COMPLEX_OUTPUT);     // this way the result may fit in the source matrix
+		fourier_ = complexI;
 
     // compute the magnitude and switch to logarithmic scale
     // => log(1 + sqrt(Re(DFT(I))^2 + Im(DFT(I))^2))
@@ -323,6 +340,40 @@ void CVMat::fourier(string window)
 
 	cv::normalize(magI, magI, 0, 1, NORM_MINMAX);//Transform the matrix with float values into a
 	imshow(window, magI);
+}
+
+void CVMat::fourier_add_qr(cv::Mat m)
+{
+	int h = fourier_.rows;
+	int w = fourier_.cols;
+	Mat planes[2];
+	int width = m.rows;
+	split(fourier_, planes);
+	imshow("add qr fourier plane 0", planes[0]);
+	m.copyTo(planes[0](Rect((w - width) / 2, (h - width) / 2, width, width)));
+	imshow("add qr fourier plane 1", planes[0]);
+	merge(planes, 2, fourier_);
+}
+
+void CVMat::inv_fourier(string window)
+{
+	cv::dft(fourier_, fourier_, DFT_INVERSE | DFT_REAL_OUTPUT | DFT_SCALE); 
+	imshow(window, fourier_);
+	CVMat m = fourier_;//CV_32FC1
+	fourier_.convertTo(*this, CV_8UC1, 255);
+}
+
+cv::Mat CVMat::get_plane0()
+{
+	Mat planes[2];
+	split(fourier_, planes);
+	return planes[0];
+}
+
+void CVMat::info()
+{
+	const char *c[] = {"CV_8U", "CV_8S", "CV_16U", "CV_16S", "CV_32S", "CV_32F", "CV_64F"};
+	cout << cols << "x" << rows << ", " << c[depth()] << 'C' << channels() << endl;
 }
 
 void CVMat::noise(int scale)

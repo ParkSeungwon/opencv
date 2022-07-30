@@ -5,6 +5,7 @@ using namespace cv;
 int main()
 {
 	Mat image = imread("IMG_0315.JPG");
+	image(Rect(0,0,100,100)) = Scalar(0,0,0);
 	Mat mdilate, merode, mclose, mopen;
 
 	erode(image, merode, Mat());
@@ -18,4 +19,5 @@ int main()
 	imshow("open", mopen);
 	imshow("close", mclose);
 	waitKey(0);
+	
 }

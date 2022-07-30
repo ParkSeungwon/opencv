@@ -4,14 +4,17 @@
 #include<core.hpp>
 #include<highgui.hpp>
 #include <opencv2/video/background_segm.hpp>
+#include"qrcodegen.hpp"
 //#include "opencv2/features2d/features2d.hpp"
 
 class CVMat : public cv::Mat
 {
 public:
 	CVMat(const cv::Mat& r);
+	CVMat(const qrcodegen::QrCode& r, int scale = 8, int border = 4);
 	CVMat() = default;
 	operator cv::Mat();
+	void info(); 
 	void filter(const Mat& m);//apply kernel
 	void show(std::string title="OpenCV");
 	void restore();
@@ -56,6 +59,9 @@ public:
 	void draw_detected_circle(cv::Scalar color = {0,0,255});
 	void draw_detected_face();
 	void fourier(std::string window = "Fourier");//after gray
+	void inv_fourier(std::string window = "inverse fourier");//after fourier
+	void fourier_add_qr(cv::Mat m);
+	cv::Mat get_plane0();
 	cv::MatND histo(std::string windwo = "Histogram");//after gray
 	template<typename T> void feature();
 	void draw_feature();
@@ -68,7 +74,7 @@ public:
 	void get_businesscard(std::vector<cv::Point> v);
 	
 protected:
-	cv::Mat save_, harris_, descriptor_;
+	cv::Mat save_, harris_, descriptor_, fourier_;
 	std::vector<Mat> bgr_;
 	std::vector<cv::Vec4i> lines_, hierachy_;//hierachy for contour
 	std::vector<cv::Vec3f> circles_;
