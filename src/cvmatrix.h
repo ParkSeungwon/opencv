@@ -53,8 +53,8 @@ public:
 	void detect_circle(int canny_threshold=200, int center_threshold=100,//gray->circ 
 			int min_radius=0, int max_radius=0);//gradient를 보므로 edge로 하면 안됨.
 	void detect_face();//gray->face
-	void detect_contours(int mode = cv::RETR_TREE, int method= cv::CHAIN_APPROX_NONE);
-	void draw_detected_contours(int thickness=1,int linetype=8, int maxlevel=INT_MAX);
+	void detect_contours(int mode = cv::RETR_EXTERNAL, int method= cv::CHAIN_APPROX_SIMPLE);
+	void draw_detected_contours(int min_area=0, int max_point = 10, int thickness=1,int linetype=8, int maxlevel=INT_MAX);
 	void draw_detected_line(cv::Scalar color = {0,0,255});
 	void draw_detected_circle(cv::Scalar color = {0,0,255});
 	void draw_detected_face();
@@ -72,6 +72,7 @@ public:
 	void transform4(cv::Point2f src[4], cv::Point2f dst[4], cv::Size sz = {0,0});
 	std::vector<cv::Point> get_points(int k);// ^ affine and perspective transform
 	void get_businesscard(std::vector<cv::Point> v);
+	std::vector<cv::Vec4i> lines() { return lines_;}
 	
 protected:
 	cv::Mat save_, harris_, descriptor_, fourier_;

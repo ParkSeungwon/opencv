@@ -78,13 +78,18 @@ void CVMat::detect_contours(int mode, int method)
 {
 	findContours(*this, contours_, hierachy_, mode, method);
 }
-void CVMat::draw_detected_contours(int thickness, int linetype, int maxlevel) 
+void CVMat::draw_detected_contours(int min_area, int max_point, int thickness, int linetype, int maxlevel) 
 {
 	static uniform_int_distribution<> di{0, 255};
 	static random_device rd;
-	for(int i=0; i<contours_.size(); i++)
-		drawContours(*this, contours_, i, {di(rd), di(rd), di(rd)}, thickness,
+	for(int i=0; i<contours_.size(); i++) {
+		approxPolyDP(contours_[i], contours_[i], 3, true);
+		if(contourArea(contours_[i]) >= min_area && contours_[i].size() <= max_point) {
+			cout << "contour size: " << contours_[i].size() << endl;
+			drawContours(*this, contours_, i, {di(rd), di(rd), di(rd)}, thickness,
 				linetype, hierachy_, maxlevel);
+		}
+	}
 }
 void CVMat::transform4(Point2f src[4], Point2f dst[4], Size sz)
 {
@@ -349,16 +354,16 @@ void CVMat::fourier_add_qr(cv::Mat m)
 	Mat planes[2];
 	int width = m.rows;
 	split(fourier_, planes);
-	imshow("add qr fourier plane 0", planes[0]);
+	//imshow("add qr fourier plane 0", planes[0]);
 	m.copyTo(planes[0](Rect((w - width) / 2, (h - width) / 2, width, width)));
-	imshow("add qr fourier plane 1", planes[0]);
+	//imshow("add qr fourier plane 1", planes[0]);
 	merge(planes, 2, fourier_);
 }
 
 void CVMat::inv_fourier(string window)
 {
 	cv::dft(fourier_, fourier_, DFT_INVERSE | DFT_REAL_OUTPUT | DFT_SCALE); 
-	imshow(window, fourier_);
+	//imshow(window, fourier_);
 	CVMat m = fourier_;//CV_32FC1
 	fourier_.convertTo(*this, CV_8UC1, 255);
 }

@@ -4,6 +4,7 @@
 #include<iostream>
 #include "qrcodegen.hpp"
 #include"cvmatrix.h"
+#include"option.h"
 #include<opencv2/objdetect.hpp>
 
 using namespace qrcodegen;
@@ -37,25 +38,38 @@ static std::string toSvgString(const QrCode &qr, int border) {
 }
 
 // Simple operation
-int main() {	
+int main(int ac, char** av) {	
+	CMDoption co{
+		{"input", "input image file", "in.png"},
+		{"output", "output image file", "out.png"},
+		{"encode", "insert hidden qr code", false}
+	};
+	if(!co.args(ac, av)) return 0;
+
 	QrCode qr0 = QrCode::encodeText("Hello, world!", QrCode::Ecc::HIGH);
 	CVMat mat{qr0, 8, 4};
 	mat.show();
 
-	CVMat m = cv::imread("truck.png");
+	CVMat m = cv::imread(co.get<const char*>("input"));
 	m.gray();
 	m.fourier();
+	if(!co.get<bool>("encode")) {
+		auto m2 = m.get_plane0();
+		cv::imshow("qr code decoded", m2);
+		m2.convertTo(m2, CV_8UC1, 255);
+		cv::imwrite(co.get<const char*>("output"), m2);
+		cv::waitKey(0);
+		return 0;
+	}
 	m.fourier_add_qr(mat);
 	m.inv_fourier();
-	m.fourier("2");
-	CVMat m2 = m.get_plane0();
-	m2.info();
-	cv::imshow("plane0", m2);
+	m.show("inv");
+	if(co.get<bool>("encode")) cv::imwrite(co.get<const char*>("output"), m);
+
 	cv::Mat pts, rectified, tmp;
-	m2.convertTo(tmp, CV_8UC1, 255);
+	m.convertTo(tmp, CV_8UC1, 255);
 	cv::QRCodeDetector qrd;
 
-	qrd.detectAndDecode(tmp, pts, rectified);
-	m.inv_fourier("3");
+	//qrd.detectAndDecode(tmp, pts, rectified);
 	cv::waitKey(0);
 }

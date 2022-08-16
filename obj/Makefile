@@ -6,6 +6,6 @@ opencvLIB = $(shell pkg-config opencv4 --libs)
 all : $(EXE)
 
 ../%.x : %.x $(OBJ)
-	$(CC) -o $@ $< $(OBJ) -lzezeon $(opencvLIB) -lpthread -lrt -lstdc++fs
+	$(CC) -o $@ $< $(OBJ) $(opencvLIB) -lpthread -lrt -lstdc++fs 
 
 

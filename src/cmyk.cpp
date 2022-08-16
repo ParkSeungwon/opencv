@@ -39,5 +39,3 @@ int main(int ac, char **av)
 	merge(channels, img);
 	imwrite(co.get<const char*>("output"), img);
 }
-
-
